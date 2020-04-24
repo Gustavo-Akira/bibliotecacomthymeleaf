@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<title>Biblioteca</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="css/materialize.min.css">
+</head>
+<body>
+	<header>
+		<nav>
+			<div class="nav-wrapper">
+				<a href="#" class="brand-logo">Logo</a>
+				<ul id="nav-mobile" class="right hide-on-med-and-down">
+					<li><a href="login">Login</a></li>
+					<li><a href="">Components</a></li>
+					<li><a href="">JavaScript</a></li>
+				</ul>
+			</div>
+		</nav>
+	</header>
+	<main class="d-flex justify-content-center align-items-center">
+		<form th:action="@{/login}" method="POST" class="col s12">
+			<div class="container ">
+				<div class="col s12">
+					<h2>Login</h2>
+				</div>
+				<div class="row">
+					<div class="input-field col s12">
+						<label>Login</label>
+						<input type="text" name="username">
+					</div>
+				</div>
+				<div class="row">
+					<div class="center-align input-field col s12">
+						<label>Senha</label>
+						<input type="password" name="password">
+					</div>
+				</div>
+				<div class="row">
+					<div class= "input-field col s6">
+						<button class="btn waves-effect waves-light">Logar</button>
+					</div>
+				</div>
+			</div>
+			</form>
+	</main>
+	<footer>
+	</footer>
+	<script th:src="@{/js/materialize.min.js}"></script>
+</body>
+</html>

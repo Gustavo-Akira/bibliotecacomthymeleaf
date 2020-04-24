@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<title>Usuarios</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+	rel="stylesheet">
+<link rel="stylesheet" href="../css/materialize.min.css">
+<link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body>
+	<header>
+			<ul id="slide-out" class="sidenav red darken-3 sidenav-fixed">
+				<li>
+					<div class="user-view justify-content-center d-flex">
+						<a href="#user"><img class="circle" src="images/yuna.jpg"></a>
+					</div>
+				</li>
+				<li ><a class="white-text" href="/dashboard/">Dashboard</a></li>
+				<li><div class="divider"></div></li>
+				<li><a class="white-text" href="/dashboard/usuarios">Usuarios</a></li>
+				<li><a class="white-text" href="/dashboard/livros">Livros</a></li>
+				<li><a class="white-text" href="/dashboard/editoras">Editoras</a></li>
+				<li><a class="white-text" href="/dashboard/generos">Gêneros</a></li>
+				<li><a class="white-text" href="/dashboard/compras">Compras</a></li>
+				<li><a class="white-text" href="/dashboard/registros">Alugados</a></li>
+			</ul>
+		<a href="#" data-target="slide-out" class="sidenav-trigger hide-on-large-only btn"><i
+			class="material-icons">menu</i></a>
+	</header>
+	<main>
+		<div class="col s12 m8 l7">
+			<div class="col s12 m8 l7">
+				<h3>Usuarios</h3>
+			</div>
+			<div class="col s12 m8 l7">
+				<table class ="striped highlight">
+					<thead>
+						<tr>
+							<th>
+								Nome
+							</th>
+							<th>
+								Sobrenome
+							</th>
+							<th>
+								Email
+							</th>
+							<th>
+								CPF
+							</th>
+							<th>
+								Cidade
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each = "usuario : ${usuarios.content}">
+							<td th:text="${usuario.nome}"></td>
+							<td th:text="${usuario.sobrenome}"></td>
+							<td th:text="${usuario.email}"></td>
+							<td id="cpf" th:text="${usuario.CPF}"></td>
+							<td th:text="${usuario.logradouros[0].cidade}"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</main>
+	<footer> </footer>
+	<script>
+		document.addEventListener('DOMContentLoaded', function() {
+			var elems = document.querySelectorAll('.sidenav');
+			var instance = M.Sidenav.init(elems);
+			document.querySelectorAll('#cpf').forEach(e => {e.innerHTML = cpf_mask(e.innerHTML)});
+		});
+		document.querySelector('.sidenav-trigger').addEventListener(
+				'click', function() {
+					
+					var elems = document.querySelector('#slide-out');
+					var instance = M.Sidenav.getInstance(elems);
+					console.log(instance.isOpen == true);
+					if (instance.isOpen == true) {
+						instance.close();
+					} else {
+						instance.open();
+					}
+				});
+		function cpf_mask(cpf){
+			cpf=cpf.replace(/\D/g,"")
+			cpf=cpf.replace(/(\d{3})(\d)/,"$1.$2")
+			cpf=cpf.replace(/(\d{3})(\d)/,"$1.$2")
+			cpf=cpf.replace(/(\d{3})(\d{1,2})$/,"$1-$2")
+			console.log(cpf);
+			return cpf;
+			}
+	</script>
+	<script src="../js/materialize.min.js"></script>
+</body>
+</html>

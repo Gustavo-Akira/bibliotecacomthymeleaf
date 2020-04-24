@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<title>Editora</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+	rel="stylesheet">
+<link rel="stylesheet" href="../../css/materialize.min.css">
+<link rel="stylesheet" href="../../css/dashboard.css">
+</head>
+<body>
+	<header>
+			<ul id="slide-out" class="sidenav sidenav-fixed red darken-3">
+				<li>
+					<div class="user-view justify-content-center d-flex">
+						<a href="#user"><img class="circle" src="images/yuna.jpg"></a>
+					</div>
+				</li>
+				<li ><a class="white-text" href="/dashboard/">Dashboard</a></li>
+				<li><div class="divider"></div></li>
+				<li><a class="white-text" href="/dashboard/usuarios">Usuarios</a></li>
+				<li><a class="white-text" href="/dashboard/livros">Livros</a></li>
+				<li><a class="white-text" href="/dashboard/editoras">Editoras</a></li>
+				<li><a class="white-text" href="/dashboard/generos">Gêneros</a></li>
+				<li><a class="white-text" href="/dashboard/compras">Compras</a></li>
+				<li><a class="white-text" href="/dashboard/registros">Alugados</a></li>
+			</ul>
+		<a href="#" data-target="slide-out" class="sidenav-trigger hide-on-large-only btn"><i
+			class="material-icons">menu</i></a>
+	</header>
+	<main>
+		<div class="col s12 m8 l7">
+			<div class="col s12 m8 l7">
+				<h3>Editora</h3>
+			</div>
+			<div class="col s12 m8 l7">
+				<form th:action="@{/dashboard/editoras/salvar}" method="POST">
+					<div class="form-row">
+						<div class="form-group">
+							<label for="nome">Nome:</label>
+							<input type="text" name="nome" id="nome" placeholder="Escreva o nome da editora">
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group">
+							<label for="email">Email:</label>
+							<input type="text" name="email" id="email" placeholder="Escreva o email da editora">
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group col s6">
+							<label for="cep">CEP:</label>
+							<input type="text" name="cep" id="cep" placeholder="Escreva o cep" onblur="pesquisacep(this.value);">
+						</div>
+						<div class="form-group col s6">
+							<label for="rua">Rua:</label>
+							<input type="text" name="rua" id="rua" placeholder="Escreva a rua">
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group col s12">
+							<label for="numero">Numero:</label>
+							<input type="text" name="numero" id="numero" placeholder="Escreva o numero">
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group col s6">
+							<label for="bairro">Bairro:</label>
+							<input type="text" name="bairro" id="bairro" placeholder="Escreva o bairro">
+						</div>
+						<div class="form-group col s6">
+							<label for="cidade">Cidade:</label>
+							<input type="text" name="cidade" id="cidade" placeholder="Escreva o bairro">
+						</div>
+					</div>
+					<div class="form-row">
+						<div class=" col s6">
+							<label for="uf">UF:</label>
+							<input type="text" name="uf" id="uf" placeholder="Escreva a Unidade Federal">
+						</div>
+						<div class=" col s6">
+							<label for="ibge">Ibge:</label>
+							<input type="text" name="ibge" id="ibge" placeholder="Escreva o ibge">
+						</div>
+					</div>
+					<button>Salvar</button>
+				</form>
+			</div>
+		</div>
+	</main>
+	<footer> </footer>
+	<script>
+		document.addEventListener('DOMContentLoaded', function() {
+			var elems = document.querySelectorAll('.sidenav');
+			var instance = M.Sidenav.init(elems);
+			document.querySelectorAll('#cpf').forEach(e => {e.innerHTML = cpf_mask(e.innerHTML)});
+		});
+		document.querySelector('.sidenav-trigger').addEventListener(
+				'click', function() {
+					
+					var elems = document.querySelector('#slide-out');
+					var instance = M.Sidenav.getInstance(elems);
+					console.log(instance.isOpen == true);
+					if (instance.isOpen == true) {
+						instance.close();
+					} else {
+						instance.open();
+					}
+				});
+		function limpa_formulário_cep() {
+            //Limpa valores do formulário de cep.
+            document.getElementById('rua').value=("");
+            document.getElementById('bairro').value=("");
+            document.getElementById('cidade').value=("");
+            document.getElementById('uf').value=("");
+            document.getElementById('ibge').value=("");
+    }
+
+    function meu_callback(conteudo) {
+        if (!("erro" in conteudo)) {
+            //Atualiza os campos com os valores.
+            document.getElementById('rua').value=(conteudo.logradouro);
+            document.getElementById('bairro').value=(conteudo.bairro);
+            document.getElementById('cidade').value=(conteudo.localidade);
+            document.getElementById('uf').value=(conteudo.uf);
+            document.getElementById('ibge').value=(conteudo.ibge);
+        } //end if.
+        else {
+            //CEP não Encontrado.
+            limpa_formulário_cep();
+            alert("CEP não encontrado.");
+        }
+    }
+        
+    function pesquisacep(valor) {
+
+        //Nova variável "cep" somente com dígitos.
+        var cep = valor.replace(/\D/g, '');
+
+        //Verifica se campo cep possui valor informado.
+        if (cep != "") {
+
+            //Expressão regular para validar o CEP.
+            var validacep = /^[0-9]{8}$/;
+
+            //Valida o formato do CEP.
+            if(validacep.test(cep)) {
+
+                //Preenche os campos com "..." enquanto consulta webservice.
+                document.getElementById('rua').value="...";
+                document.getElementById('bairro').value="...";
+                document.getElementById('cidade').value="...";
+                document.getElementById('uf').value="...";
+                document.getElementById('ibge').value="...";
+
+                //Cria um elemento javascript.
+                var script = document.createElement('script');
+
+                //Sincroniza com o callback.
+                script.src = 'https://viacep.com.br/ws/'+ cep + '/json/?callback=meu_callback';
+
+                //Insere script no documento e carrega o conteúdo.
+                document.body.appendChild(script);
+
+            } //end if.
+            else {
+                //cep é inválido.
+                limpa_formulário_cep();
+                alert("Formato de CEP inválido.");
+            }
+        } //end if.
+        else {
+            //cep sem valor, limpa formulário.
+            limpa_formulário_cep();
+        }
+    };
+	</script>
+</body>
+</html>

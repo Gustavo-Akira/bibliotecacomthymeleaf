@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<title>Dahsboard</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+	rel="stylesheet">
+<link rel="stylesheet" th:href="@{/css/materialize.css}">
+<link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body>
+	<header>
+			<ul id="slide-out" class="sidenav sidenav-fixed red darken-3">
+				<li>
+					<div class="user-view justify-content-center d-flex">
+						<a href="#user"><img class="circle" src="images/yuna.jpg"></a>
+					</div>
+				</li>
+				<li ><a class="white-text" href="/dashboard/">Dashboard</a></li>
+				<li><div class="divider"></div></li>
+				<li><a class="white-text" href="/dashboard/usuarios">Usuarios</a></li>
+				<li><a class="white-text" href="/dashboard/livros">Livros</a></li>
+				<li><a class="white-text" href="/dashboard/editoras">Editoras</a></li>
+				<li><a class="white-text" href="/dashboard/generos">Gêneros</a></li>
+				<li><a class="white-text" href="/dashboard/compras">Compras</a></li>
+				<li><a class="white-text" href="/dashboard/registros">Alugados</a></li>
+			</ul>
+		<a href="#" data-target="slide-out" class="sidenav-trigger hide-on-large-only btn"><i
+			class="material-icons">menu</i></a>
+	</header>
+	<main>
+		<div class="section">
+			<div class="row">
+				<div class="col s12">
+					<h4 th:text="${'Editora: ' + editora.nome}"></h4>
+				</div>
+				<div class="col s12">
+					<h4 th:text="${'Email: ' + editora.email}"></h4>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col s12">
+					<h5>Endereços</h5>
+					<table>
+						<thead>
+							<tr>
+								<th>Rua</th>
+								<th>Numero</th>
+								<th>Bairro</th>
+								<th>Cidade</th>
+								<th>Estado</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="logradouro: ${editora.logradouro}">
+								<td th:text="${logradouro.rua}"></td>
+								<td th:text="${logradouro.numero}"></td>
+								<td th:text="${logradouro.bairro}"></td>
+								<td th:text="${logradouro.cidade}"></td>
+								<td th:text="${logradouro.uf}"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col s12">
+					<h5>Livros</h5>
+					<table>
+						<thead>
+							<tr>
+								<th>
+									Nome
+								</th>
+								<th>
+									Preço
+								</th>
+								<th>
+									Quantidade
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:if="${editora.livros != null}" th:each="livro:${editora.livros}">
+								
+							</tr>
+							<tr th:else>
+								<td>Não se tem nenhum livro dessa editora no momento</td>
+								<td></td>
+								<td></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</main>
+	<footer> </footer>
+	<script th:src="@{/js/materialize.min.js}"></script>
+</body>
+</html>
