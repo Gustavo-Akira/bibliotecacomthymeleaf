@@ -34,7 +34,7 @@
 				<h3>Generos</h3>
 			</div>
 			<div class="col s12 m8 l7">
-				<a href="/dashboard/generos/novo" class="btn btn-waves green darken-1 white-text">Novo</a>
+				<a th:href="@{/dashboard/generos/novo}" class="btn btn-waves green darken-1 white-text">Novo</a>
 				<table class ="striped highlight">
 					<thead>
 						<tr>
@@ -43,6 +43,9 @@
 							</th>
 							<th>
 								Nome
+							</th>
+							<th>
+								Editar
 							</th>
 							<th>
 								Excluir
@@ -58,7 +61,10 @@
 								
 							</td>
 							<td>
-								<a th:href="@{../dashboard/generos/deletar/{id}(id=${genero.id})}" class="btn btn-waves red">Excluir</a>
+								<a th:href="@{/dashboard/generos/editar/{id}(id=${genero.id})}" class="btn btn-waves green">Editar</a>
+							</td>
+							<td>
+								<a th:href="@{/dashboard/generos/deletar/{id}(id=${genero.id})}" class="btn btn-waves red">Excluir</a>
 							</td>
 						</tr>
 					</tbody>

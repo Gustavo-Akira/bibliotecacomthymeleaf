@@ -126,6 +126,13 @@ public class DashboardController {
 		model.addObject("generos", generos);
 		return model;
 	}
+	@GetMapping(value="**/generos/editar/{id}")
+	public ModelAndView generoEditar(@PathVariable("id") Long id) {
+		Optional<Genero> genero= generoRepository.findById(id);
+		ModelAndView model = new ModelAndView("dashboard/generos/editar");
+		model.addObject("genero", genero.get());
+		return model;
+	}
 	@GetMapping(value = "/compras")
 	public ModelAndView compras() {
 		ModelAndView model = new ModelAndView("dashboard/compras/index");

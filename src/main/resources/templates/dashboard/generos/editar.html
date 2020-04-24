@@ -31,13 +31,14 @@
 	<main>
 		<div class="col s12 m8 l7">
 			<div class="col s12 m8 l7">
-				<h3>Genero Novo</h3>
+				<h3>Editar Genero</h3>
 			</div>
 			<div class="col s12 m8 l7">
-				<form action="generos/salvar" method="POST">
+				<form action="generos/salvar" method="POST" th:object=${genero}>
 					<div class="form-group">
+						<input type="hidden" name="id" th:field=*{id}>
 						<label for="genero">Genero:</label>
-						<input type="text" name="nome" id="genero">
+						<input type="text" name="nome" id="genero" th:field=*{nome}>
 					</div>
 					<button class="btn">Salvar</button>
 				</form>
