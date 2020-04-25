@@ -12,22 +12,23 @@
 </head>
 <body>
 	<header>
-			<ul id="slide-out" class="sidenav sidenav-fixed red darken-3">
-				<li>
-					<div class="user-view justify-content-center d-flex">
-						<a href="#user"><img class="circle" src="images/yuna.jpg"></a>
-					</div>
-				</li>
-				<li ><a class="white-text" href="/dashboard/">Dashboard</a></li>
-				<li><div class="divider"></div></li>
-				<li><a class="white-text" href="/dashboard/usuarios">Usuarios</a></li>
-				<li><a class="white-text" href="/dashboard/livros">Livros</a></li>
-				<li><a class="white-text" href="/dashboard/editoras">Editoras</a></li>
-				<li><a class="white-text" href="/dashboard/generos">Gêneros</a></li>
-				<li><a class="white-text" href="/dashboard/compras">Compras</a></li>
-				<li><a class="white-text" href="/dashboard/registros">Alugados</a></li>
-			</ul>
-		<a href="#" data-target="slide-out" class="sidenav-trigger hide-on-large-only btn"><i
+		<ul id="slide-out" class="sidenav sidenav-fixed red darken-3">
+			<li>
+				<div class="user-view justify-content-center d-flex">
+					<a href="#user"><img class="circle" src="images/yuna.jpg"></a>
+				</div>
+			</li>
+			<li><a class="white-text" href="/dashboard/">Dashboard</a></li>
+			<li><div class="divider"></div></li>
+			<li><a class="white-text" href="/dashboard/usuarios">Usuarios</a></li>
+			<li><a class="white-text" href="/dashboard/livros">Livros</a></li>
+			<li><a class="white-text" href="/dashboard/editoras">Editoras</a></li>
+			<li><a class="white-text" href="/dashboard/generos">Gêneros</a></li>
+			<li><a class="white-text" href="/dashboard/compras">Compras</a></li>
+			<li><a class="white-text" href="/dashboard/registros">Alugados</a></li>
+		</ul>
+		<a href="#" data-target="slide-out"
+			class="sidenav-trigger hide-on-large-only btn"><i
 			class="material-icons">menu</i></a>
 	</header>
 	<main>
@@ -43,6 +44,8 @@
 			<div class="row">
 				<div class="col s12">
 					<h5>Endereços</h5>
+					<a class="btn btn-waves green"
+						th:href="@{/dashboard/logradouro/novo/editora/{id}(id=${editora.id})}">Novo</a>
 					<table>
 						<thead>
 							<tr>
@@ -51,6 +54,8 @@
 								<th>Bairro</th>
 								<th>Cidade</th>
 								<th>Estado</th>
+								<th>Editar</th>
+								<th>Deletar</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -60,6 +65,10 @@
 								<td th:text="${logradouro.bairro}"></td>
 								<td th:text="${logradouro.cidade}"></td>
 								<td th:text="${logradouro.uf}"></td>
+								<td><a class="btn btn-waves green">Editar</a></td>
+								<td th:if="${editora.logradouro.size() != 1}"><a
+									class="btn btn-waves red" th:href="@{/dashboard/logradouro/delete/{id}(id=${logradouro.id})}">Deletar</a></td>
+								<td th:else>minimo um logradouro</td>
 							</tr>
 						</tbody>
 					</table>
@@ -67,29 +76,25 @@
 			</div>
 			<div class="row">
 				<div class="col s12">
-					<h5>Livros</h5>
+					<h5>Telefones</h5>
+					<form method="POST" th:action="@{/dashboard/telefone/novo/editora/{id}(id=${editora.id})}">
+						<div class="form-group col s6">
+							<label for="numero">Número</label>
+							<input class="col s12" name="numero" id="numero">
+						</div>
+						<div class="form-group col s12">
+							<button type="submit" class="btn">Salvar</button>
+						</div>
+					</form>
 					<table>
 						<thead>
 							<tr>
-								<th>
-									Nome
-								</th>
-								<th>
-									Preço
-								</th>
-								<th>
-									Quantidade
-								</th>
+								<th>Numero</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr th:if="${editora.livros != null}" th:each="livro:${editora.livros}">
-								
-							</tr>
-							<tr th:else>
-								<td>Não se tem nenhum livro dessa editora no momento</td>
-								<td></td>
-								<td></td>
+							<tr th:if="${editora.telefones} != null" th:each="telefones:${editora.telefones}">
+								<td th:text="${telefones.numero}"></td>
 							</tr>
 						</tbody>
 					</table>

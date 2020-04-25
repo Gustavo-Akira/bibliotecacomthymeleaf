@@ -5,8 +5,8 @@
 <title>Editora</title>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
 	rel="stylesheet">
-<link rel="stylesheet" href="../../css/materialize.min.css">
-<link rel="stylesheet" href="../../css/dashboard.css">
+<link rel="stylesheet" th:href="@{/css/materialize.min.css}">
+<link rel="stylesheet" th:href="@{/css/dashboard.css}">
 </head>
 <body>
 	<header>
@@ -31,22 +31,10 @@
 	<main>
 		<div class="col s12 m8 l7">
 			<div class="col s12 m8 l7">
-				<h3>Editora</h3>
+				<h3>Novo Logradouro</h3>
 			</div>
 			<div class="col s12 m8 l7">
-				<form th:action="@{/dashboard/editoras/salvar}" method="POST">
-					<div class="form-row">
-						<div class="form-group">
-							<label for="nome">Nome:</label>
-							<input type="text" name="nome" id="nome" placeholder="Escreva o nome da editora">
-						</div>
-					</div>
-					<div class="form-row">
-						<div class="form-group">
-							<label for="email">Email:</label>
-							<input type="text" name="email" id="email" placeholder="Escreva o email da editora">
-						</div>
-					</div>
+				<form th:action="@{/dashboard/logradouro/salvar/editora/{id}(id=${id})}" method="POST">
 					<div class="form-row">
 						<div class="form-group col s6">
 							<label for="cep">CEP:</label>

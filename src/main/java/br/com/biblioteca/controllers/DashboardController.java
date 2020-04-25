@@ -1,5 +1,7 @@
 package br.com.biblioteca.controllers;
 
+import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 import br.com.biblioteca.models.Editora;
 import br.com.biblioteca.models.Genero;
 import br.com.biblioteca.models.Logradouro;
+import br.com.biblioteca.models.Telefone;
 import br.com.biblioteca.models.Usuarios;
 import br.com.biblioteca.repositories.ComprasRepository;
 import br.com.biblioteca.repositories.EditorasRepository;
@@ -26,6 +29,7 @@ import br.com.biblioteca.repositories.GeneroRepository;
 import br.com.biblioteca.repositories.LivrosRepository;
 import br.com.biblioteca.repositories.LogradouroRepository;
 import br.com.biblioteca.repositories.RegistrosRepository;
+import br.com.biblioteca.repositories.TelefoneRepository;
 import br.com.biblioteca.repositories.UsuariosRepository;
 
 @Controller
@@ -52,6 +56,9 @@ public class DashboardController {
 	@Autowired
 	private LogradouroRepository logradouroRepository;
 	
+	@Autowired
+	private TelefoneRepository telefoneRepository;
+	
 	@GetMapping(value = "/")
 	public ModelAndView dashboard() {
 		ModelAndView model = new ModelAndView("dashboard/index");
@@ -67,7 +74,7 @@ public class DashboardController {
 	}
 	@GetMapping(value = "/livros")
 	public ModelAndView livros() {
-		ModelAndView model = new ModelAndView("dashboard/usuarios/index");
+		ModelAndView model = new ModelAndView("dashboard/livros/index");
 		return model;
 	}
 	@GetMapping(value = "**/editoras")
@@ -94,7 +101,6 @@ public class DashboardController {
 	public ModelAndView editorasid(@PathVariable("id")Long id) {
 	ModelAndView model = new ModelAndView("dashboard/editora/unique");
 	Optional<Editora> editora = editorasRepository.findById(id);
-	editora.get().setLogradouro(logradouroRepository.getLogradouroBydIdEditora(id));
 	model.addObject("editora",editora.get());
 	return model;
 	}
@@ -143,4 +149,42 @@ public class DashboardController {
 		ModelAndView model = new ModelAndView("dashboard/registros/index");
 		return model;
 	}
+	@PostMapping(value="/telefone/novo/editora/{id}")
+	public ModelAndView novotelefone(Telefone telefone,@PathVariable("id") Long id) {
+		Editora editora = editorasRepository.findById(id).get();
+		telefone.setEditora(editora);
+		telefoneRepository.save(telefone);
+		ModelAndView model = new ModelAndView("dashboard/sucesso");
+		model.addObject("tipo","inserir");
+		model.addObject("entidade","telefone");
+		return model;
+	}
+	@GetMapping(value="logradouro/novo/editora/{id}")
+	public ModelAndView novologradouro(@PathVariable("id") Long id) {
+		ModelAndView model = new ModelAndView("dashboard/logradouro/novo");
+		model.addObject("id",id);
+		return model;
+	}
+	@PostMapping(value="logradouro/salvar/editora/{id}")
+	public ModelAndView novologradouro(Logradouro logradouro,@PathVariable("id") Long id) {
+		Editora editora = editorasRepository.findById(id).get();
+		logradouro.setEditora(editora);
+		logradouroRepository.save(logradouro);
+		ModelAndView model = new ModelAndView("dashboard/sucesso");
+		model.addObject("tipo","inserção");
+		model.addObject("entidade","logradouro");
+		return model;
+	}
+	@GetMapping(value="logradouro/delete/{id}")
+	public ModelAndView excluirLogradouro(@PathVariable("id") Long id) {
+		Logradouro logradouro =logradouroRepository.getOne(id);
+		while(logradouroRepository.existsById(id)) {
+			logradouroRepository.delete(logradouro);
+		}
+		ModelAndView model = new ModelAndView("dashboard/sucesso");
+		model.addObject("tipo","deletado");
+		model.addObject("entidade","logradouro");
+		return model;
+	}
+	
 }
