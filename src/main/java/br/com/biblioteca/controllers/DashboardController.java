@@ -81,6 +81,7 @@ public class DashboardController {
 	public ModelAndView editoras() {
 		ModelAndView model = new ModelAndView("dashboard/editora/index");
 		Page<Editora> editoras = editorasRepository.findAll(PageRequest.of(0, 5, Sort.by("nome")));
+		System.out.println(editoras);
 		model.addObject("editoras",editoras);
 		return model;
 	}
@@ -95,9 +96,10 @@ public class DashboardController {
 		logradouro.setEditora(editora);
 		logradouro = logradouroRepository.save(logradouro);
 		ModelAndView model = new ModelAndView("dashboard/editora/index");
+		model.addObject("editoras",editorasRepository.findAll(PageRequest.of(0, 5, Sort.by("nome"))));
 		return model;
 	}
-	@GetMapping(value = "/editoras/{id}")
+	@GetMapping(value = "/editoras/view/{id}")
 	public ModelAndView editorasid(@PathVariable("id")Long id) {
 	ModelAndView model = new ModelAndView("dashboard/editora/unique");
 	Optional<Editora> editora = editorasRepository.findById(id);
@@ -171,18 +173,32 @@ public class DashboardController {
 		logradouro.setEditora(editora);
 		logradouroRepository.save(logradouro);
 		ModelAndView model = new ModelAndView("dashboard/sucesso");
-		model.addObject("tipo","inserção");
+		model.addObject("tipo","inserido");
 		model.addObject("entidade","logradouro");
 		return model;
 	}
-	@GetMapping(value="logradouro/delete/{id}")
-	public ModelAndView excluirLogradouro(@PathVariable("id") Long id) {
-		Logradouro logradouro =logradouroRepository.getOne(id);
-		while(logradouroRepository.existsById(id)) {
-			logradouroRepository.delete(logradouro);
-		}
+	@GetMapping(value="logradouro/delete/{editora}/{id}")
+	public ModelAndView excluirLogradouro(@PathVariable("id") Long id,@PathVariable("editora")Long editora) {
+		Logradouro logradouro =logradouroRepository.findById(id).get();
+		Editora editoras = editorasRepository.findById(editora).get();
+		editoras.getLogradouro().remove(logradouro);
+		editorasRepository.save(editoras);
 		ModelAndView model = new ModelAndView("dashboard/sucesso");
 		model.addObject("tipo","deletado");
+		model.addObject("entidade","logradouro");
+		return model;
+	}
+	@GetMapping(value="logradouro/editar/{id}")
+	public ModelAndView editarlogradouroNew(@PathVariable("id") Long id) {
+		ModelAndView model = new ModelAndView("dashboard/logradouro/editar");
+		model.addObject("logradouro",logradouroRepository.findById(id).get());
+		return model;
+	}
+	@PostMapping(value="logradouro/editar/{id}")
+	public ModelAndView editarlogradouro(Logradouro logradouro,@PathVariable("id") Long id) {
+		logradouroRepository.save(logradouro);
+		ModelAndView model = new ModelAndView("dashboard/sucesso");
+		model.addObject("tipo","editado");
 		model.addObject("entidade","logradouro");
 		return model;
 	}

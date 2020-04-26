@@ -60,7 +60,7 @@
 							<td th:text="${usuario.sobrenome}"></td>
 							<td th:text="${usuario.email}"></td>
 							<td id="cpf" th:text="${usuario.CPF}"></td>
-							<td th:text="${usuario.logradouros[0].cidade}"></td>
+							<td th:if="${usuario.logradouros} != null" th:text="${usuario.logradouros[0].cidade}"></td>
 						</tr>
 					</tbody>
 				</table>

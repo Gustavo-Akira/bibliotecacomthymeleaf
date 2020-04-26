@@ -53,7 +53,7 @@
 						<tr th:each="editora : ${editoras.content}">
 							<td th:text=${editora.nome}></td>
 							<td th:text=${editora.email}></td>
-							<td><a class="btn btn-waves" th:href="@{/dashboard/editoras/{id}(id=${editora.id})}">Ver mais</a></td>
+							<td><a class="btn btn-waves" th:href="@{/dashboard/editoras/view/{id}(id=${editora.id})}">Ver mais</a></td>
 						</tr>
 					</tbody>
 				</table>
