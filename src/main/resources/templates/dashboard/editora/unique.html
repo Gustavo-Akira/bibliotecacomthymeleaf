@@ -89,11 +89,15 @@
 						<thead>
 							<tr>
 								<th>Numero</th>
+								<th>Editar</th>
+								<th>Deletar</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr th:if="${editora.telefones} != null" th:each="telefones:${editora.telefones}">
 								<td th:text="${telefones.numero}"></td>
+								<td><a  class="btn btn-waves green" th:href="@{/dashboard/telefone/editar/{id}(id=${telefones.id})}">Editar</a></td>
+								<td><a th:href="@{/dashboard/telefone/deletar/{editora}/{id}(id=${telefones.id},editora=${editora.id})}" class="btn btn-waves red">Deletar</a></td>
 							</tr>
 						</tbody>
 					</table>

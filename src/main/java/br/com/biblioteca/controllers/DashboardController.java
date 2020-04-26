@@ -81,7 +81,6 @@ public class DashboardController {
 	public ModelAndView editoras() {
 		ModelAndView model = new ModelAndView("dashboard/editora/index");
 		Page<Editora> editoras = editorasRepository.findAll(PageRequest.of(0, 5, Sort.by("nome")));
-		System.out.println(editoras);
 		model.addObject("editoras",editoras);
 		return model;
 	}
@@ -158,6 +157,32 @@ public class DashboardController {
 		telefoneRepository.save(telefone);
 		ModelAndView model = new ModelAndView("dashboard/sucesso");
 		model.addObject("tipo","inserir");
+		model.addObject("entidade","telefone");
+		return model;
+	}
+	@PostMapping(value="/telefone/editar/")
+	public ModelAndView editarTelefone(Telefone telefone) {
+		telefoneRepository.save(telefone);
+		ModelAndView model = new ModelAndView("dashboard/sucesso");
+		model.addObject("tipo","inserir");
+		model.addObject("entidade","telefone");
+		return model;
+	}
+	@GetMapping(value="/telefone/editar/{id}")
+	public ModelAndView editarT(@PathVariable("id")Long id) {
+		Telefone telefone = telefoneRepository.findById(id).get();
+		ModelAndView model = new ModelAndView("dashboard/telefone/editar");
+		model.addObject("telefone",telefone);
+		return model;
+	}
+	@GetMapping(value="/telefone/deletar/{editora}/{id}")
+	public ModelAndView deletartelefone(@PathVariable("id") Long id,@PathVariable("editora")Long editora) {
+		Editora editoras = editorasRepository.findById(editora).get();
+		Telefone telefone = telefoneRepository.findById(id).get();
+		editoras.getTelefones().remove(telefone);
+		editorasRepository.save(editoras);
+		ModelAndView model = new ModelAndView("dashboard/sucesso");
+		model.addObject("tipo","deletado");
 		model.addObject("entidade","telefone");
 		return model;
 	}
