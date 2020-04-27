@@ -75,6 +75,12 @@ public class Livros {
 	public void setRegistros(List<Registros> registros) {
 		this.registros = registros;
 	}
+	public List<Genero> getGeneros() {
+		return generos;
+	}
+	public void setGeneros(List<Genero> generos) {
+		this.generos = generos;
+	}
 
 	@Override
 	public int hashCode() {

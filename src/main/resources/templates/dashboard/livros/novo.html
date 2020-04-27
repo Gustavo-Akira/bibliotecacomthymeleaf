@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<title>Dahsboard</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+	rel="stylesheet">
+<link rel="stylesheet" th:href="@{/css/materialize.css}">
+<link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body>
+	<header>
+		<ul id="slide-out" class="sidenav sidenav-fixed red darken-3">
+			<li>
+				<div class="user-view justify-content-center d-flex">
+					<a href="#user"><img class="circle" src="images/yuna.jpg"></a>
+				</div>
+			</li>
+			<li><a class="white-text" href="/dashboard/">Dashboard</a></li>
+			<li><div class="divider"></div></li>
+			<li><a class="white-text" href="/dashboard/usuarios">Usuarios</a></li>
+			<li><a class="white-text" href="/dashboard/livros">Livros</a></li>
+			<li><a class="white-text" href="/dashboard/editoras">Editoras</a></li>
+			<li><a class="white-text" href="/dashboard/generos">Gêneros</a></li>
+			<li><a class="white-text" href="/dashboard/compras">Compras</a></li>
+			<li><a class="white-text" href="/dashboard/registros">Alugados</a></li>
+		</ul>
+		<a href="#" data-target="slide-out"
+			class="sidenav-trigger hide-on-large-only btn"><i
+			class="material-icons">menu</i></a>
+	</header>
+	<main>
+		<div class="section">
+			<div class="row">
+				<div class="col s12">
+					<h3>Novo livro</h3>
+					<form method="POST" th:action="@{/dashboard/livros/salvar}">
+						<div class="form-group">
+							<label for="nome">Nome</label> <input type="text" name="nome"
+								id="nome">
+						</div>
+						<div class="form-group">
+							<label for="preco">Preço</label> <input type="number"
+								name="preco" id="preco">
+						</div>
+						<div class="form-group">
+							<label for="quantidade">Quantidade</label> <input type="number"
+								name="quantidade" id="quantidade">
+						</div>
+						<div class="form-row">
+							<p>Generos</p>
+								<label class="col s1" th:each="genero:${generos}"> <input name="generos" id="indeterminate-checkbox"
+									type="checkbox" th:value=${genero.id} /> <span th:text="${genero.nome}"></span>
+								</label>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="editora">Editora</label> <select name="editora"
+								class="browser-default">
+								<option th:each="editora:${editoras}" th:value="${editora.id}"
+									th:text="${editora.nome}"></option>
+							</select>
+						</div>
+						<div class="form-group" style="margin-top:1%">
+							<button class="btn">Salvar</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</main>
+	<footer> </footer>
+	<script th:src="@{/js/materialize.min.js}"></script>
+</body>
+</html>

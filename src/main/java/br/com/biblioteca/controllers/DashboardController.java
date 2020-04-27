@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import br.com.biblioteca.models.Editora;
 import br.com.biblioteca.models.Genero;
+import br.com.biblioteca.models.Livros;
 import br.com.biblioteca.models.Logradouro;
 import br.com.biblioteca.models.Telefone;
 import br.com.biblioteca.models.Usuarios;
@@ -74,7 +75,24 @@ public class DashboardController {
 	}
 	@GetMapping(value = "/livros")
 	public ModelAndView livros() {
+		Page<Livros> livros = livrosRepository.findAll(PageRequest.of(0, 5,Sort.by("nome")));
 		ModelAndView model = new ModelAndView("dashboard/livros/index");
+		model.addObject("livros",livros);
+		return model;
+	}
+	@GetMapping(value = "/livros/novo")
+	public ModelAndView novolivro() {
+		ModelAndView model = new ModelAndView("dashboard/livros/novo");
+		model.addObject("editoras",editorasRepository.findAll());
+		model.addObject("generos",generoRepository.findAll());
+		return model;
+	}
+	@PostMapping(value = "/livros/salvar")
+	public ModelAndView salvarlivro(Livros livro) {
+		livrosRepository.save(livro);
+		ModelAndView model = new ModelAndView("dashboard/sucesso");
+		model.addObject("tipo","inserir");
+		model.addObject("entidade","telefone");
 		return model;
 	}
 	@GetMapping(value = "**/editoras")
