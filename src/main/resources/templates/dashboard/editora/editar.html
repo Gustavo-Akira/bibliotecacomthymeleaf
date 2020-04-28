@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 <meta charset="UTF-8">
-<title>Editora</title>
+<title> Genero | novo</title>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
 	rel="stylesheet">
 <link rel="stylesheet" th:href="@{/css/materialize.min.css}">
@@ -31,40 +31,19 @@
 	<main>
 		<div class="col s12 m8 l7">
 			<div class="col s12 m8 l7">
-				<h3>Editora</h3>
+				<h3>Editar Editora</h3>
 			</div>
 			<div class="col s12 m8 l7">
-				<a href="/dashboard/editoras/novo" class="btn btn-waves green darken-1 white-text">Novo</a>
-				<table class ="striped highlight">
-					<thead>
-						<tr>
-							<th>
-								Nome
-							</th>
-							<th>
-								Email
-							</th>
-							<th>
-								Ver mais
-							</th>
-							<th>
-								Editar
-							</th>
-							<th>
-								Deletar
-							</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr th:each="editora : ${editoras.content}">
-							<td th:text=${editora.nome}></td>
-							<td th:text=${editora.email}></td>
-							<td><a class="btn btn-waves" th:href="@{/dashboard/editoras/view/{id}(id=${editora.id})}">Ver mais</a></td>
-							<td><a class="btn btn-waves" th:href="@{/dashboard/editoras/editar/{id}(id=${editora.id})}">Editar</a></td>
-							<td><a class="btn btn-waves red" th:href="@{/dashboard/editoras/deletar/{id}(id=${editora.id})}">Deletar</a></td>
-						</tr>
-					</tbody>
-				</table>
+				<form th:action="@{/dashboard/editoras/edit}" method="POST" th:object=${editora}>
+					<div class="form-group">
+						<input type="hidden" name="id" th:field=*{id}>
+						<label for="nome">Nome:</label>
+						<input type="text" name="nome" id="nome" th:field=*{nome}>
+						<label for="email">Email:</label>
+						<input type="text" name="email" id="email" th:field=*{email}>
+					</div>
+					<button class="btn">Salvar</button>
+				</form>
 			</div>
 		</div>
 	</main>

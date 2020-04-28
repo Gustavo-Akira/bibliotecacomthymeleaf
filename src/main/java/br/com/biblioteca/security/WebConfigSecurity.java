@@ -28,6 +28,6 @@ public class WebConfigSecurity  extends WebSecurityConfigurerAdapter{
 	
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		web.ignoring().antMatchers("/css/**").and().ignoring().antMatchers("/js/**");
+		web.ignoring().antMatchers("/css/**").and().ignoring().antMatchers("/js/**").and().ignoring().antMatchers("/imagens/**");
 	}
 }

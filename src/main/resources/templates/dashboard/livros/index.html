@@ -18,7 +18,7 @@
 						<a href="#user"><img class="circle" src="images/yuna.jpg"></a>
 					</div>
 				</li>
-				<li ><a class="white-text" href="/dashboard/">Dashboard</a></li>
+				<li><a class="white-text" href="/dashboard/">Dashboard</a></li>
 				<li><div class="divider"></div></li>
 				<li><a class="white-text" href="/dashboard/usuarios">Usuarios</a></li>
 				<li><a class="white-text" href="/dashboard/livros">Livros</a></li>
@@ -40,6 +40,9 @@
 						<thead>
 							<tr>
 								<th>
+									Capa
+								</th>
+								<th>
 									Nome
 								</th>
 								<th>
@@ -54,17 +57,26 @@
 								<th>
 									Generos
 								</th>
+								<th>
+									Editar
+								</th>
+								<th>
+									Deletar
+								</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr th:each="livro: ${livros.content}">
+								<td th:if="${livro.fotos.size()} != 0"><img style="max-width:50px" class="responsive-img" th:src="${livro.fotos[0].caminho}"/></td>
 								<td th:text="${livro.nome}"></td>
 								<td th:text="${livro.preco}"></td>
 								<td th:text="${livro.quantidade}"></td>
 								<td th:text="${livro.editora.nome}"></td>
-								<td th:each="generos:${livro.generos}">
-									<p th:text="${generos.nome}"></p>
+								<td>
+									<p th:each="generos:${livro.generos}" th:text="${generos.nome}"></p>
 								</td>
+								<td><a th:href="@{/dashboard/livros/editar/{id}(id=${livro.id})}" class="btn green">Editar</a></td>
+								<td><a th:href="@{/dashboard/livros/deletar/{id}(id=${livro.id})}" class="btn red">Deletar</a></td>
 							</tr>
 						</tbody>
 					</table>

@@ -35,25 +35,25 @@
 		<div class="section">
 			<div class="row">
 				<div class="col s12">
-					<h3>Novo livro</h3>
-					<form method="POST" th:action="@{/dashboard/livros/salvar}" enctype="multipart/form-data">
+					<h3>Editar livro</h3>
+					<form method="POST" th:action="@{/dashboard/livros/editar/salvar/{id}(id=${livro.id})}" enctype="multipart/form-data" th:object="${livro}">
 						<div class="form-group">
-							<label for="nome">Nome</label> <input type="text" name="nome"
+							<label for="nome">Nome</label> <input type="text" name="nome" th:field="*{nome}"
 								id="nome">
 						</div>
 						<div class="form-group">
-							<label for="preco">Preço</label> <input type="number"
+							<label for="preco">Preço</label> <input type="number" th:field="*{preco}"
 								name="preco" id="preco">
 						</div>
 						<div class="form-group">
-							<label for="quantidade">Quantidade</label> <input type="number"
+							<label for="quantidade">Quantidade</label> <input type="number" th:field="*{quantidade}"
 								name="quantidade" id="quantidade">
 						</div>
 						<div class="form-row">
 							<p>Generos</p>
 							<label class="col s1" th:each="genero:${generos}"> <input
-								name="generos" id="indeterminate-checkbox" type="checkbox"
-								th:value=${genero.id} /> <span th:text="${genero.nome}"></span>
+								name="generos"  type="checkbox"
+								th:value=${genero.id} th:checked="*{generos}"/> <span th:text="${genero.nome}"></span>
 							</label>
 						</div>
 				</div>
@@ -61,7 +61,7 @@
 					<label for="editora">Editora</label> <select name="editora"
 						class="browser-default">
 						<option th:each="editora:${editoras}" th:value="${editora.id}"
-							th:text="${editora.nome}"></option>
+							th:text="${editora.nome}" th:selected="*{editoras}"></option>
 					</select>
 				</div>
 				<div class="file-field input-field">

@@ -23,6 +23,7 @@ public class Editora {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+	
 	private String nome;
 	
 	@LazyCollection(LazyCollectionOption.FALSE)
@@ -31,7 +32,6 @@ public class Editora {
 	
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
-	@JoinColumn(name="livro_id")
 	private List<Livros> livros; 
 	
 	@LazyCollection(LazyCollectionOption.FALSE)

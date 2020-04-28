@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,6 +14,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 @Entity
 public class Livros {
@@ -35,7 +40,18 @@ public class Livros {
 	@ManyToMany
 	@JoinTable(name = "livros_genero",joinColumns = @JoinColumn(name = "livro_id", referencedColumnName = "id",table = "livros"), inverseJoinColumns =  @JoinColumn(name="genero_id", referencedColumnName = "id",table = "genero"))
 	private List<Genero> generos;
-
+	
+	@LazyCollection(LazyCollectionOption.FALSE)
+	@OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
+	private List<Foto> fotos; 
+	
+	public List<Foto> getFotos() {
+		return fotos;
+	}
+	public void setFotos(List<Foto> fotos) {
+		this.fotos = fotos;
+	}
+	
 	public Long getId() {
 		return id;
 	}
@@ -114,5 +130,11 @@ public class Livros {
 	public void setQuantidade(BigInteger quantidade) {
 		this.quantidade = quantidade;
 	}
-
+	@Override
+	public String toString() {
+		return "Livros [id=" + id + ", nome=" + nome + ", quantidade=" + quantidade + ", preco=" + preco
+				+ ", registros=" + registros + ", editora=" + editora + ", generos=" + generos + ", fotos=" + fotos
+				+ "]";
+	}
+	
 }
