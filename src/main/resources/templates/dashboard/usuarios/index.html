@@ -5,8 +5,8 @@
 <title>Usuarios</title>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
 	rel="stylesheet">
-<link rel="stylesheet" href="../css/materialize.min.css">
-<link rel="stylesheet" href="../css/dashboard.css">
+<link rel="stylesheet" th:href="@{/css/materialize.min.css}">
+<link rel="stylesheet" th:href="@{/css/dashboard.css}">
 </head>
 <body>
 	<header>
@@ -32,6 +32,7 @@
 		<div class="col s12 m8 l7">
 			<div class="col s12 m8 l7">
 				<h3>Usuarios</h3>
+				<a th:href="@{/dashboard/usuarios/novo}" class="btn green">Novo</a>
 			</div>
 			<div class="col s12 m8 l7">
 				<table class ="striped highlight">
@@ -60,7 +61,8 @@
 							<td th:text="${usuario.sobrenome}"></td>
 							<td th:text="${usuario.email}"></td>
 							<td id="cpf" th:text="${usuario.CPF}"></td>
-							<td th:if="${usuario.logradouros} != null" th:text="${usuario.logradouros[0].cidade}"></td>
+							<td th:if="${usuario.logradouros.size()} != 0" th:text="${usuario.logradouros[0].cidade}"></td>
+							<td><a th:href="@{/dashboard/usuarios/deletar/{id}(id = ${usuario.id})}" class="btn red">Deletar</a></td>
 						</tr>
 					</tbody>
 				</table>
@@ -95,6 +97,6 @@
 			return cpf;
 			}
 	</script>
-	<script src="../js/materialize.min.js"></script>
+	<script th:src="@{/js/materialize.min.js}"></script>
 </body>
 </html>

@@ -28,6 +28,7 @@ import br.com.biblioteca.models.Foto;
 import br.com.biblioteca.models.Genero;
 import br.com.biblioteca.models.Livros;
 import br.com.biblioteca.models.Logradouro;
+import br.com.biblioteca.models.Role;
 import br.com.biblioteca.models.Telefone;
 import br.com.biblioteca.models.Usuarios;
 import br.com.biblioteca.repositories.ComprasRepository;
@@ -37,6 +38,7 @@ import br.com.biblioteca.repositories.GeneroRepository;
 import br.com.biblioteca.repositories.LivrosRepository;
 import br.com.biblioteca.repositories.LogradouroRepository;
 import br.com.biblioteca.repositories.RegistrosRepository;
+import br.com.biblioteca.repositories.RolesRepository;
 import br.com.biblioteca.repositories.TelefoneRepository;
 import br.com.biblioteca.repositories.UsuariosRepository;
 
@@ -69,6 +71,9 @@ public class DashboardController {
 
 	@Autowired
 	private FotoRepository fotoRepository;
+	
+	@Autowired
+	private RolesRepository rolesRepository;
 
 	@GetMapping(value = "/")
 	public ModelAndView dashboard() {
@@ -80,13 +85,45 @@ public class DashboardController {
 	public ModelAndView usuarios() {
 		ModelAndView model = new ModelAndView("dashboard/usuarios/index");
 		Page<Usuarios> usuarios = usuarioRepository.findAll(PageRequest.of(0, 5, Sort.by("nome")));
-		usuarios.forEach(e -> {
-			e.setLogradouros(logradouroRepository.getLogradouroBydIdUsuario(e.getId()));
-		});
+		usuarios.forEach(e->{if(e.getId() == 1) {e.setLogradouros(logradouroRepository.getLogradouroBydIdUsuario(e.getId()));}});
 		model.addObject("usuarios", usuarios);
 		return model;
 	}
-
+	
+	@GetMapping(value="/usuarios/novo")
+	public ModelAndView usuariosnovo() {
+		ModelAndView model = new ModelAndView("dashboard/usuarios/novo");
+		return model;
+	}
+	@PostMapping(value="/usuarios/salvar")
+	public ModelAndView usuariossalvar(Usuarios usuario, Logradouro logradouro) {
+		List<Role> roles = new ArrayList<Role>();
+		roles.add(rolesRepository.findById(2L).get());
+		usuario.setRoles(roles);
+		usuario = usuarioRepository.save(usuario);
+		logradouro.setUsuario(usuario);
+		logradouroRepository.save(logradouro);
+		ModelAndView model = new ModelAndView("dashboard/sucesso");
+		model.addObject("tipo", "inserido");
+		model.addObject("entidade", "usuario");
+		return model;
+	}
+	@GetMapping("/usuarios/editar/{id}")
+	public ModelAndView usuarioseditar(@PathVariable("id")Long id) {
+		Usuarios usuario =usuarioRepository.findById(id).get();
+		ModelAndView model = new ModelAndView("dashboard/usuario/editar");
+		model.addObject("usuario",usuario);
+		return model;
+	}
+	@GetMapping("/usuarios/deletar/{id}")
+	public ModelAndView usuariosdeletar(@PathVariable("id")Long id) {
+		usuarioRepository.deleteById(id);
+		ModelAndView model = new ModelAndView("dashboard/sucesso");
+		model.addObject("tipo", "deletado");
+		model.addObject("entidade", "usuario");
+		return model;
+		
+	}
 	@GetMapping(value = "/livros")
 	public ModelAndView livros() {
 		Page<Livros> livros = livrosRepository.findAll(PageRequest.of(0, 5, Sort.by("nome")));
@@ -114,6 +151,7 @@ public class DashboardController {
 	@PostMapping(value = "/livros/editar/salvar/{id}")
 	public ModelAndView editlivro(Livros livro,@PathVariable("id")Long id, final MultipartFile file) throws IOException {
 		Livros antigo = livrosRepository.findById(id).get();
+		System.out.println(file.getSize());
 		if(file.getSize() >0) {
 			List<Foto> fotos = new ArrayList<Foto>();
 			try {
@@ -144,6 +182,7 @@ public class DashboardController {
 			livro.setFotos(antigo.getFotos());
 		}
 		try {
+			System.out.println(livro.getGeneros());
 			livrosRepository.save(livro);
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -191,9 +230,7 @@ public class DashboardController {
 	@GetMapping(value = "/livros/deletar/{id}")
 	public ModelAndView deletar(@PathVariable("id") Long id) {
 		Livros livro = livrosRepository.findById(id).get();
-		livro.getFotos().forEach(e -> {
-			fotoRepository.deleteById(e.getId());
-		});
+		System.out.println(livro);
 		livrosRepository.delete(livro);
 		ModelAndView model = new ModelAndView("dashboard/sucesso");
 		model.addObject("tipo", "inserir");

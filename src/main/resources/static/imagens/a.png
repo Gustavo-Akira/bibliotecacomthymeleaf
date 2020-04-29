@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Unyttos Admin</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+    <link rel="stylesheet" href="http://localhost/Unyttos-Admin/assets/css/styles.css" />
+</head>
+
+<body>
+    <div class="perfil container">
+        <div class="columns has-equal-height">
+            <div class="column is-3-large">
+                <header class="perfil__menu">
+                    <div class="perfil__head perfil__item">
+                        <figure class="perfil__avatar perfil__item">
+                            <img src="http://localhost/Unyttos-Admin/assets/images/avatar.png" alt="Fulano" class="perfil__img" />
+                            <figcaption class="perfil__name">
+                                Fulano<br />lv. 0<br/>
+                                colaborador                            </figcaption>
+                        </figure>
+                        <div class="bar">
+                            <span class="bar__value">100/100</span>
+                            <progress max="100" value="100" class="perfil__bar perfil__bar--health">
+                                <div class="perfil__bar-fallback"></div>
+                            </progress>
+                        </div>
+                        <div class="bar">
+                            <span class="bar__value">0/100</span>
+                            <progress max="100" value="0" class="perfil__bar perfil__bar--experience">
+                                <div class="perfil__bar-fallback"></div>
+                            </progress>
+                        </div>
+                    </div>
+                    <section class="perfil__section section">
+                        <header class="perfil__header">
+                            <h2 class="perfil__title">Atributos</h2>
+                        </header>
+                        <div class="section__body">
+                        </div>
+                    </section>
+
+                    <section class="perfil__section section">
+                        <header class="perfil__header">
+                            <h2 class="perfil__title">Medalhas</h2>
+                        </header>
+                        <div class="section__body">
+
+                        </div>
+                    </section>
+
+                    <section class="perfil__section section">
+                        <header class="perfil__header">
+                            <h2 class="perfil__title">Titulos</h2>
+                        </header>
+                        <div class="section__body">
+
+                        </div>
+                    </section>
+                    <a href="http://localhost/Unyttos-Admin/login/logout">Sair da conta</a>
+                </header>
+            </div>
+            <main class="perfil__main column is-6-large">
+                <article class="perfil__content">
+                    <section class="perfil__section section">
+    <header class="perfil__header">
+        <h2 class="perfil__title">Arquivos</h2>
+    </header>
+    <div class="section__body">
+        Não há nenhum arquivo no momento    </div>
+</section>                </article>
+            </main>
+            <div class="column is-3-large">
+                <aside class="actions perfil__menu">
+                    <article class="perfil__timer timer perfil__section section">
+                        <header class="perfil__header">
+                            <h3 class="perfil__title">Time tracker</h3>
+                        </header>
+                        <div class="timer__content section__body">
+                            <div>
+                                <button data-timer="start" data-target="#timer" class="button--icon">
+                                    <i class="material-icons">play_arrow</i>
+                                </button>
+                                <button data-timer="stop" data-target="#timer" class="button--icon">
+                                    <i class="material-icons button--icon">stop</i>
+                                </button>
+                            </div>
+                            <div class="popup__container">
+                                <button data-popup="#timer" class="button--icon">
+                                    <i class="material-icons button--icon">schedule</i>
+                                </button>
+                                <div id="timer" class="popup timer__counter">
+                                    00:00:00
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="userID" value="2">
+                        <input type="hidden" id="baseURL" value="http://localhost/Unyttos-Admin/">
+                    </article>
+
+                    <article class="perfil__section section">
+                        <header class="perfil__header">
+                            <h3 class="perfil__title">Diário</h3>
+                        </header>
+                        <div class="section__body">
+                            <a href="http://localhost/Unyttos-Admin/diario/add" class="button--icon has-text"><i class="material-icons">book</i> Escrever relatório</a>
+                        </div>
+                    </article>
+
+                    <article class="perfil__section section">
+                        <header class="perfil__header">
+                            <h3 class="perfil__title">Prêmios</h3>
+                        </header>
+                        <div class="section__body">
+                        </div>
+                    </article>
+                </aside>
+            </div>
+        </div>
+    </div>
+    <script src="http://localhost/Unyttos-Admin/assets/js/main.min.js"></script>
+</body>
+
+</html>

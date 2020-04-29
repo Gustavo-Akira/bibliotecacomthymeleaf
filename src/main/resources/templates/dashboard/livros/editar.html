@@ -49,11 +49,27 @@
 							<label for="quantidade">Quantidade</label> <input type="number" th:field="*{quantidade}"
 								name="quantidade" id="quantidade">
 						</div>
+						<div class="form-group">
+							<label for="descricao">Descricao</label> 
+							<textarea name="descricao" th:field=*{descricao}></textarea>
+						</div>
+						<div class="form-group">
+							<label for="edicao">Edicao</label>
+							<input name="edicao" id="edicao" th:field=*{edicao}> 
+						</div>
+						<div class="form-group">
+							<label for="acabamento">Acabamento</label>
+							<label for="edicao">Acabamento</label>
+							<select name="acabamento" class="browser-default">
+								<option value="Brochura" th:selected=*{acabamento}>Brochura</option>
+								<option value="Capa dura" th:selected=*{acabamento}>Capa dura</option>
+							</select> 
+						</div>
 						<div class="form-row">
 							<p>Generos</p>
-							<label class="col s1" th:each="genero:${generos}"> <input
+							<label class="col s1" th:each="genero:${generos}" > <input
 								name="generos"  type="checkbox"
-								th:value=${genero.id} th:checked="*{generos}"/> <span th:text="${genero.nome}"></span>
+								th:value=${genero.id} th:each="gener: *{generos}"  th:checked="${gener.id} == ${genero.id}"/> <span th:text="${genero.nome}"></span>
 							</label>
 						</div>
 				</div>
@@ -72,12 +88,12 @@
 						<input class="file-path validate" type="text">
 					</div>
 				</div>
+				<input type="hidden" name="id" th:value=*{id}>
 				<div class="form-group" style="margin-top: 1%">
 					<button class="btn">Salvar</button>
 				</div>
 				</form>
 			</div>
-		</div>
 		</div>
 	</main>
 	<footer> </footer>

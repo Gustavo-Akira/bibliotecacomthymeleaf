@@ -43,6 +43,7 @@ public class Usuarios implements UserDetails {
 	@NotBlank(message = "Sobrenome não pode ser vazia")
 	private String sobrenome;
 	
+	@Column(unique = true)
 	@NotNull(message = "E-mail não pode ser nulo")
 	@NotBlank(message = "E-mail não pode ser vazia")
 	@Email(message = "E-mail invalido")
@@ -155,6 +156,10 @@ public class Usuarios implements UserDetails {
 
 	public void setSenha(String senha) {
 		this.senha = senha;
+	}
+	
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
 	}
 
 	@Override

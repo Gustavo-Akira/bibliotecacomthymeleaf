@@ -64,6 +64,9 @@
 						<thead>
 							<tr>
 								<th>
+									Capa
+								</th>
+								<th>
 									Nome
 								</th>
 								<th>
@@ -72,13 +75,20 @@
 								<th>
 									Quantidade
 								</th>
+								<th>
+									Ver mais
+								</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr th:if="${editora.livros != null}" th:each="livro:${editora.livros}">
-								
+							<tr th:if="${livros.size()} !=0 " th:each="livro:${livros}">
+								<td><img style="max-width:50px" class="responsive-img" th:src="${livro.fotos[0].caminho}"></td>
+								<td th:text=${livro.nome}></td>
+								<td th:text="${'R$ '+livro.preco}"></td>
+								<td th:text=${livro.quantidade}></td>
+								<td><a th:href="@{/livros/{id}(id=${livro.id})}" class="btn">Ver mais</a></td>
 							</tr>
-							<tr th:else>
+							<tr th:if="${livros.size()} == 0">
 								<td>Não se tem nenhum livro dessa editora no momento</td>
 								<td></td>
 								<td></td>

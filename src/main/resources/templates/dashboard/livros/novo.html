@@ -37,6 +37,7 @@
 				<div class="col s12">
 					<h3>Novo livro</h3>
 					<form method="POST" th:action="@{/dashboard/livros/salvar}" enctype="multipart/form-data">
+						
 						<div class="form-group">
 							<label for="nome">Nome</label> <input type="text" name="nome"
 								id="nome">
@@ -48,6 +49,21 @@
 						<div class="form-group">
 							<label for="quantidade">Quantidade</label> <input type="number"
 								name="quantidade" id="quantidade">
+						</div>
+						<div class="form-row">
+							<label for="edicao">Edição</label> <input type="number"
+								name="edicao" id="edicao">
+						</div>
+						<div class="form-group">
+							<label for="descricao">Descrição</label> 
+							<textarea name="descricao" id="descricao"></textarea>
+						</div>
+						<div class="form-row">
+							<label for="edicao">Acabamento</label>
+							<select name="acabamento" class="browser-default">
+								<option value="Brochura">Brochura</option>
+								<option value="Capa dura">Capa dura</option>
+							</select>
 						</div>
 						<div class="form-row">
 							<p>Generos</p>

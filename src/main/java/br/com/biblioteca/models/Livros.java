@@ -34,24 +34,31 @@ public class Livros {
 	@ManyToMany
 	private List<Registros> registros;
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	private Editora editora;
-	
+
 	@ManyToMany
-	@JoinTable(name = "livros_genero",joinColumns = @JoinColumn(name = "livro_id", referencedColumnName = "id",table = "livros"), inverseJoinColumns =  @JoinColumn(name="genero_id", referencedColumnName = "id",table = "genero"))
+	@JoinTable(name = "livros_genero", joinColumns = @JoinColumn(name = "livro_id", referencedColumnName = "id", table = "livros"), inverseJoinColumns = @JoinColumn(name = "genero_id", referencedColumnName = "id", table = "genero"))
 	private List<Genero> generos;
-	
+
 	@LazyCollection(LazyCollectionOption.FALSE)
-	@OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
-	private List<Foto> fotos; 
-	
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Foto> fotos;
+
+	private String descricao;
+
+	private String edicao;
+
+	private String acabamento;
+
 	public List<Foto> getFotos() {
 		return fotos;
 	}
+
 	public void setFotos(List<Foto> fotos) {
 		this.fotos = fotos;
 	}
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -91,9 +98,11 @@ public class Livros {
 	public void setRegistros(List<Registros> registros) {
 		this.registros = registros;
 	}
+
 	public List<Genero> getGeneros() {
 		return generos;
 	}
+
 	public void setGeneros(List<Genero> generos) {
 		this.generos = generos;
 	}
@@ -130,11 +139,36 @@ public class Livros {
 	public void setQuantidade(BigInteger quantidade) {
 		this.quantidade = quantidade;
 	}
+	
+	public String getAcabamento() {
+		return acabamento;
+	}
+	
+	public void setAcabamento(String acabamento) {
+		this.acabamento = acabamento;
+	}
+	
+	public String getDescricao() {
+		return descricao;
+	}
+	
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
+	
+	public void setEdicao(String edicao) {
+		this.edicao = edicao;
+	}
+	
+	public String getEdicao() {
+		return edicao;
+	}
+
 	@Override
 	public String toString() {
 		return "Livros [id=" + id + ", nome=" + nome + ", quantidade=" + quantidade + ", preco=" + preco
 				+ ", registros=" + registros + ", editora=" + editora + ", generos=" + generos + ", fotos=" + fotos
 				+ "]";
 	}
-	
+
 }
