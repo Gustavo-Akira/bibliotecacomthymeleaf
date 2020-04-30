@@ -23,11 +23,11 @@ import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
+import org.springframework.security.core.userdetails.User;
 import javax.validation.constraints.NotNull;
 
 @Entity
-public class Usuarios implements UserDetails {
+public class Usuarios implements UserDetails{
 
 	private static final long serialVersionUID = 1L;
 

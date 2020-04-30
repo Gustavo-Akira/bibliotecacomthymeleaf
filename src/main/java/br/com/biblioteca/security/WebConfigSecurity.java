@@ -19,7 +19,7 @@ public class WebConfigSecurity  extends WebSecurityConfigurerAdapter{
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.csrf().disable().authorizeRequests().antMatchers(HttpMethod.GET,"/","/livros/**","/editoras/**").permitAll().antMatchers(HttpMethod.GET,"/listarusuario").hasAnyRole("ADMIN").anyRequest().authenticated().and().formLogin().permitAll().loginPage("/login").defaultSuccessUrl("/dashboard/").failureUrl("/login?error=true").and().logout().logoutSuccessUrl("/login").logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
+		http.csrf().disable().authorizeRequests().antMatchers(HttpMethod.GET,"/","/livros/**","/editoras/**","/perfil/cadastrar").permitAll().antMatchers(HttpMethod.GET,"/dashboard/**").hasAnyRole("ADMIN","SECRETARY").antMatchers("/perfis/**","/compras/**").hasAnyRole("USER").anyRequest().authenticated().and().formLogin().permitAll().loginPage("/login").defaultSuccessUrl("/entrar").failureUrl("/login?error=true").and().logout().logoutSuccessUrl("/login").logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
 	}
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {

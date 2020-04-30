@@ -26,20 +26,22 @@
 		<div class="section">
 			<div class="row">
 				<div class="col s12">
-					<h3>Editoras</h3>
+					<h3>Livros</h3>
 				</div>
 				<div class="col s12">
 					<table class="striped highlight">
 						<thead class="white-text" style="background: #ee6e73">
 							<tr>
+								<th>Capa</th>
 								<th>Nome</th>
 								<th>Ver mais</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr th:each="editora :${editoras.content}">
-								<td th:text="${editora.nome}"></td>
-								<td><a class="btn btn-waves" th:href="@{/editoras/{id}(id=${editora.id})}">Ver mais</a></td>
+							<tr th:each="livro :${livros.content}">
+								<td><img th:src="${livro.fotos[0].caminho}"/></td>
+								<td th:text="${livro.nome}"></td>
+								<td><a class="btn btn-waves" th:href="@{/livros/{id}(id=${livro.id})}">Ver mais</a></td>
 							</tr>
 						</tbody>
 					</table>

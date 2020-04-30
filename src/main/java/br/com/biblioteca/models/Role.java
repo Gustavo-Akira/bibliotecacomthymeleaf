@@ -85,6 +85,13 @@ public class Role implements GrantedAuthority{
 			return false;
 		return true;
 	}
+
+
+
+	@Override
+	public String toString() {
+		return "Role [id=" + id + ", nome=" + nome + "]";
+	}
 	
 	
 }

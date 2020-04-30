@@ -1,6 +1,7 @@
 package br.com.biblioteca.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +16,13 @@ public class LivrosController {
 	
 	@Autowired
 	private LivrosRepository livrosRepository;
+	
+	@GetMapping("/")
+	public ModelAndView index() {
+		ModelAndView model = new ModelAndView("livros/index");
+		model.addObject("livros",livrosRepository.findAll(PageRequest.of(0, 5)));
+		return model;
+	}
 	
 	@GetMapping("/{id}")
 	public ModelAndView id(@PathVariable("id")Long id) {
