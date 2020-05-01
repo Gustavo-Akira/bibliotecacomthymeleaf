@@ -20,38 +20,128 @@
 		</nav>
 	</header>
 	<main>
-		<div class="section">
+		<div class="container">
 			<div class="row">
 				<div class="col s12">
 					<h3>Cadastrar-se</h3>
 				</div>
-				<form class="col s12">
+				<form class="col s12" th:action="@{/perfil/salvar}" method="POST">
 					<div class="row">
 						<div class="input-field col s6">
-	          				<input id="nome" type="text" class="validate">
+	          				<input id="nome" type="text" name="nome"  class="validate">
 	          				<label for="nome">Nome</label>
 	        			</div>
 	        			<div class="input-field col s6">
-	          				<input id="sobrenome" type="text" class="validate">
+	          				<input id="sobrenome" type="text" name="sobrenome"  class="validate">
 	          				<label for="sobrenome">Sobrenome</label>
 	        			</div>
 					</div>
 					<div class="row">
 						<div class="input-field col s6">
-	          				<input id="email" type="email" class="validate">
+	          				<input id="email" type="email" name="email"  class="validate">
 	          				<label for="email">Email</label>
 	        			</div>
 	        			<div class="input-field col s6">
-	          				<input id="senha" type="password" class="validate">
+	          				<input id="senha" type="password" name="senha"  class="validate">
 	          				<label for="senha">Senha</label>
 	        			</div>
 					</div>
+					<div class="row">
+						<div class="input-field col s6">
+	          				<input id="cpf" type="text" name="CPF" class="validate">
+	          				<label for="cpf">CPF</label>
+	        			</div>
+	        			<div class="input-field col s6">
+	          				<input id="cep" type="text" name="cep"  class="validate" onblur="pesquisacep(this.value);">
+	          				<label for="cep">CEP</label>
+	        			</div>
+					</div>
+					<div class="row">
+	        			<div class="input-field col s6">
+	          				<input id="rua" type="text" name="rua" class="validate valid">
+	          				<label for="rua">Rua</label>
+	        			</div>
+	        			<div class="input-field col s6">
+	          				<input id="numero" type="text" name="numero"  class="validate">
+	          				<label for="numero">Numero</label>
+	        			</div>
+					</div>
+					<div class="row">
+	        			<div class="input-field col s6">
+	          				<input id="bairro" type="text" name="bairro" class="validate valid">
+	          				<label for="bairro">Bairro</label>
+	        			</div>
+	        			<div class="input-field col s6">
+	          				<input id="cidade" type="text" name="cidade"  class="validate valid">
+	          				<label for="cidade">Cidade</label>
+	        			</div>
+					</div>
+					<div class="row">
+						<div class="input-field col s6">
+	          				<input id="uf" type="text" name="uf"  class="validate valid">
+	          				<label for="uf">UF</label>
+	        			</div>
+	        			<div class="input-field col s6">
+	          				<input id="ibge" type="text" name="ibge" class="validate valid">
+	          				<label for="ibge">Ibge</label>
+	        			</div>
+					</div>
+					<button class="btn">Salvar</button>
 				</form>
 			</div>
 		</div>
 	</main>
 	<footer>
 	</footer>
+	<script>
+	function pesquisacep(valor) {
+
+        var cep = valor.replace(/\D/g, '');
+
+        if (cep != "") {
+
+            var validacep = /^[0-9]{8}$/;
+
+            if(validacep.test(cep)) {
+
+                document.getElementById('rua').value="...";
+                document.getElementById('bairro').value="...";
+                document.getElementById('cidade').value="...";
+                document.getElementById('uf').value="...";
+                document.getElementById('ibge').value="...";
+
+                var script = document.createElement('script');
+
+                script.src = 'https://viacep.com.br/ws/'+ cep + '/json/?callback=meu_callback';
+
+                document.body.appendChild(script);
+
+            } 
+            else {
+                limpa_formulário_cep();
+                alert("Formato de CEP inválido.");
+            }
+        } 
+        else {
+            limpa_formulário_cep();
+        }
+    };
+    function meu_callback(conteudo) {
+        if (!("erro" in conteudo)) {
+            //Atualiza os campos com os valores.
+            document.getElementById('rua').value=(conteudo.logradouro);
+            document.getElementById('bairro').value=(conteudo.bairro);
+            document.getElementById('cidade').value=(conteudo.localidade);
+            document.getElementById('uf').value=(conteudo.uf);
+            document.getElementById('ibge').value=(conteudo.ibge);
+        } //end if.
+        else {
+            //CEP não Encontrado.
+            limpa_formulário_cep();
+            alert("CEP não encontrado.");
+        }
+    }
+	</script>
 	<script th:src="@{/js/materialize.min.js}"></script>
 </body>
 </html>

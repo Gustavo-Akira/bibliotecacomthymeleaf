@@ -45,7 +45,7 @@ public class IndexController {
 		User principal =(User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		Usuarios usuario = usuarioRepository.findUsuarioByLogin(principal.getUsername());
 		for( Role role :(List<Role>) usuario.getAuthorities()) {
-			if(role.getNome() == "ROLE_USER") {
+			if(role.getId() == 3L) {
 				return "redirect:/perfil/"; 
 			}else{
 				return "redirect:/dashboard/";
