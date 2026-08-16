@@ -334,7 +334,7 @@ public class DashboardController {
 		return model;
 	}
 
-	@GetMapping(value = "**/generos/editar/{id}")
+	@GetMapping(value = "**/generos/edita	r/{id}")
 	public ModelAndView generoEditar(@PathVariable("id") Long id) {
 		Optional<Genero> genero = generoRepository.findById(id);
 		ModelAndView model = new ModelAndView("dashboard/generos/editar");
