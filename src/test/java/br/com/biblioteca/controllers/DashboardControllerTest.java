@@ -15,8 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.biblioteca.models.Editora;
+import br.com.biblioteca.models.Genero;
 import br.com.biblioteca.models.Logradouro;
 import br.com.biblioteca.repositories.EditorasRepository;
+import br.com.biblioteca.repositories.GeneroRepository;
 import br.com.biblioteca.repositories.LogradouroRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +48,9 @@ class DashboardControllerTest {
 
     @Autowired
     private LogradouroRepository logradouroRepository;
+
+    @Autowired
+    private GeneroRepository generoRepository;
 
     @Test
     @WithMockUser(roles = "ADMIN")
@@ -261,6 +266,82 @@ class DashboardControllerTest {
                 .isEmpty();
 
         assertThat(logradouroRepository.findById(logradouroId))
+                .isEmpty();
+    }
+
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void shouldCreateGenre() throws Exception {
+        long genresBefore = generoRepository.count();
+
+        mockMvc.perform(
+                        post("/dashboard/generos/salvar")
+                                .param("nome", "Ficção Científica")
+                                .with(csrf())
+                )
+                .andExpect(status().isOk())
+                .andExpect(view().name("dashboard/generos/index"));
+
+        assertThat(generoRepository.count())
+                .isEqualTo(genresBefore + 1);
+
+        Genero genero = generoRepository.findAll()
+                .stream()
+                .filter(item -> "Ficção Científica".equals(item.getNome()))
+                .findFirst()
+                .orElseThrow();
+
+        assertThat(genero.getNome())
+                .isEqualTo("Ficção Científica");
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void shouldEditGenre() throws Exception {
+        Genero genero = new Genero();
+        genero.setNome("Nome Original");
+
+        genero = generoRepository.save(genero);
+
+        Long id = genero.getId();
+
+        mockMvc.perform(
+                        post("/dashboard/generos/salvar")
+                                .param("id", id.toString())
+                                .param("nome", "Nome Atualizado")
+                                .with(csrf())
+                )
+                .andExpect(status().isOk())
+                .andExpect(view().name("dashboard/generos/index"));
+
+        Genero updated = generoRepository.findById(id)
+                .orElseThrow();
+
+        assertThat(updated.getNome())
+                .isEqualTo("Nome Atualizado");
+
+        assertThat(generoRepository.count())
+                .isEqualTo(1);
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void shouldDeleteGenre() throws Exception {
+        Genero genero = new Genero();
+        genero.setNome("Gênero Para Deletar");
+
+        genero = generoRepository.save(genero);
+
+        Long id = genero.getId();
+
+        mockMvc.perform(
+                        get("/dashboard/generos/deletar/{id}", id)
+                )
+                .andExpect(status().isOk())
+                .andExpect(view().name("dashboard/generos/index"));
+
+        assertThat(generoRepository.findById(id))
                 .isEmpty();
     }
 }
