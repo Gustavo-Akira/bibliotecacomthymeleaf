@@ -50,7 +50,7 @@ jobs:
 
       - name: Run tests
         env:
-          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/biblioteca
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/bibliotecath
           SPRING_DATASOURCE_USERNAME: postgres
           SPRING_DATASOURCE_PASSWORD: 123456
         run: ./mvnw test
