@@ -1,6 +1,7 @@
 package br.com.biblioteca.controllers;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -10,7 +11,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
+import br.com.biblioteca.models.Editora;
+import br.com.biblioteca.models.Logradouro;
+import br.com.biblioteca.repositories.EditorasRepository;
+import br.com.biblioteca.repositories.LogradouroRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -33,6 +40,12 @@ class DashboardControllerTest {
 
     @Autowired
     private LivrosRepository livrosRepository;
+
+    @Autowired
+    private EditorasRepository  editorasRepository;
+
+    @Autowired
+    private LogradouroRepository logradouroRepository;
 
     @Test
     @WithMockUser(roles = "ADMIN")
@@ -134,5 +147,120 @@ class DashboardControllerTest {
                 .andExpect(view().name("dashboard/sucesso"));
 
         assertThat(livrosRepository.findById(id)).isEmpty();
+    }
+
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void shouldCreatePublisher() throws Exception {
+        long publishersBefore = editorasRepository.count();
+
+        mockMvc.perform(
+                        post("/dashboard/editoras/salvar")
+                                .param("nome", "Editora Teste")
+                                .param("email", "editora@teste.com")
+                                .param("logradouro", "")
+                                .with(csrf())
+                )
+                .andExpect(status().isOk())
+                .andExpect(view().name("dashboard/editora/index"));
+
+        assertThat(editorasRepository.count())
+                .isEqualTo(publishersBefore + 1);
+
+        Editora editora = editorasRepository.findAll()
+                .stream()
+                .filter(item -> "Editora Teste".equals(item.getNome()))
+                .findFirst()
+                .orElseThrow();
+
+        assertThat(editora.getNome()).isEqualTo("Editora Teste");
+        assertThat(editora.getEmail()).isEqualTo("editora@teste.com");
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void shouldEditPublisher() throws Exception {
+        Editora editora = new Editora();
+        editora.setNome("Editora Original");
+        editora.setEmail("original@teste.com");
+
+        editora = editorasRepository.save(editora);
+
+        Long id = editora.getId();
+
+        mockMvc.perform(
+                        post("/dashboard/editoras/edit")
+                                .param("id", id.toString())
+                                .param("nome", "Editora Atualizada")
+                                .param("email", "atualizada@teste.com")
+                                .with(csrf())
+                )
+                .andExpect(status().isOk())
+                .andExpect(view().name("dashboard/sucesso"));
+
+        Editora updated = editorasRepository.findById(id)
+                .orElseThrow();
+
+        assertThat(updated.getNome())
+                .isEqualTo("Editora Atualizada");
+
+        assertThat(updated.getEmail())
+                .isEqualTo("atualizada@teste.com");
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void shouldFailToDeletePublisherWithoutAddress() throws Exception {
+        Editora editora = new Editora();
+        editora.setNome("Editora Sem Logradouro");
+        editora.setEmail("semendereco@teste.com");
+
+        editora = editorasRepository.save(editora);
+
+        Long id = editora.getId();
+
+        assertThatThrownBy(() ->
+                mockMvc.perform(
+                        get("/dashboard/editoras/deletar/{id}", id)
+                ).andReturn()
+        )
+                .hasCauseInstanceOf(NullPointerException.class);
+
+        assertThat(editorasRepository.findById(id))
+                .isPresent();
+    }
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void shouldDeletePublisherWithAddress() throws Exception {
+        Editora editora = new Editora();
+        editora.setNome("Editora Para Deletar");
+        editora.setEmail("deletar@teste.com");
+        Logradouro logradouro = new Logradouro();
+        editora = editorasRepository.save(editora);
+        logradouro.setEditora(editora);
+        logradouro.setBairro("Bairro");
+        logradouro.setCEP("445151");
+        logradouro.setCidade("Cidade");
+        logradouro.setIbge("41414");
+        logradouro.setNumero(45);
+        logradouro.setRua("Rua");
+        logradouro.setUf("UF");
+        logradouro = logradouroRepository.save(logradouro);
+        editora.setLogradouro(List.of(logradouro));
+        Long editoraId = editora.getId();
+        Long logradouroId = logradouro.getId();
+
+        mockMvc.perform(
+                        get("/dashboard/editoras/deletar/{id}", editoraId)
+                )
+                .andExpect(status().isOk())
+                .andExpect(view().name("dashboard/sucesso"));
+
+        assertThat(editorasRepository.findById(editoraId))
+                .isEmpty();
+
+        assertThat(logradouroRepository.findById(logradouroId))
+                .isEmpty();
     }
 }
