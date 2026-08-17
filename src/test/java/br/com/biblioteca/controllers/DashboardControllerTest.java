@@ -448,7 +448,7 @@ class DashboardControllerTest {
     }
 
     private void createSecretaryRole() {
-        if(!rolesRepository.existsById(2L)){
+        if(rolesRepository.existsById(2L)){
             return;
         }
         Role role = new Role();
