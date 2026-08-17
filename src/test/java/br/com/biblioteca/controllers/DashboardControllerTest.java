@@ -11,26 +11,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 
-import br.com.biblioteca.models.Editora;
-import br.com.biblioteca.models.Genero;
-import br.com.biblioteca.models.Logradouro;
-import br.com.biblioteca.repositories.EditorasRepository;
-import br.com.biblioteca.repositories.GeneroRepository;
-import br.com.biblioteca.repositories.LogradouroRepository;
+import br.com.biblioteca.models.*;
+import br.com.biblioteca.repositories.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-
-import br.com.biblioteca.models.Livros;
-import br.com.biblioteca.repositories.LivrosRepository;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -51,6 +45,26 @@ class DashboardControllerTest {
 
     @Autowired
     private GeneroRepository generoRepository;
+
+    @Autowired
+    private UsuariosRepository usuariosRepository;
+
+    @Autowired
+    private RolesRepository rolesRepository;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @BeforeEach
+    void setUp() {
+        if(!rolesRepository.existsById(2L)){
+            jdbcTemplate.update(
+                    "INSERT INTO role (id, nome) VALUES (?, ?) " +
+                            "ON CONFLICT (id) DO NOTHING",
+                    2L,
+                    "ROLE_SECRETARY"
+            );
+        }
+    }
 
     @Test
     @WithMockUser(roles = "ADMIN")
@@ -342,6 +356,109 @@ class DashboardControllerTest {
                 .andExpect(view().name("dashboard/generos/index"));
 
         assertThat(generoRepository.findById(id))
+                .isEmpty();
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void shouldCreateUser() throws Exception {
+        long usersBefore = usuariosRepository.count();
+
+        mockMvc.perform(
+                        post("/dashboard/usuarios/salvar")
+                                .param("nome", "Usuario")
+                                .param("sobrenome", "Teste")
+                                .param("email", "usuario.teste@teste.com")
+                                .param("senha", "123456")
+                                .with(csrf())
+                )
+                .andExpect(status().isOk())
+                .andExpect(view().name("dashboard/sucesso"));
+
+        assertThat(usuariosRepository.count())
+                .isEqualTo(usersBefore + 1);
+
+        Usuarios usuario = usuariosRepository.findAll()
+                .stream()
+                .filter(item -> "usuario.teste@teste.com".equals(item.getEmail()))
+                .findFirst()
+                .orElseThrow();
+
+        assertThat(usuario.getNome()).isEqualTo("Usuario");
+        assertThat(usuario.getSobrenome()).isEqualTo("Teste");
+        assertThat(usuario.getEmail()).isEqualTo("usuario.teste@teste.com");
+
+        // Characterization: password is stored encoded.
+        assertThat(usuario.getSenha())
+                .isNotEqualTo("123456");
+
+        assertThat(usuario.getAuthorities())
+                .isNotNull()
+                .hasSize(1);
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void shouldEditUser() throws Exception {
+
+        Usuarios usuario = new Usuarios();
+        usuario.setNome("Nome Original");
+        usuario.setSobrenome("Sobrenome Original");
+        usuario.setEmail("usuario.edicao@teste.com");
+        usuario.setSenha("password");
+
+        usuario = usuariosRepository.save(usuario);
+        long usersBefore = usuariosRepository.count();
+        Long id = usuario.getId();
+
+        mockMvc.perform(
+                        post("/dashboard/usuarios/salvar")
+                                .param("id", id.toString())
+                                .param("nome", "Nome Atualizado")
+                                .param("sobrenome", "Sobrenome Atualizado")
+                                .param("email", "usuario.edicao@teste.com")
+                                .param("senha", "novaSenha")
+                                .with(csrf())
+                )
+                .andExpect(status().isOk())
+                .andExpect(view().name("dashboard/sucesso"));
+
+        Usuarios updated = usuariosRepository.findById(id)
+                .orElseThrow();
+
+        assertThat(updated.getNome())
+                .isEqualTo("Nome Atualizado");
+
+        assertThat(updated.getSobrenome())
+                .isEqualTo("Sobrenome Atualizado");
+
+        assertThat(updated.getEmail())
+                .isEqualTo("usuario.edicao@teste.com");
+
+        assertThat(usuariosRepository.count())
+                .isEqualTo(usersBefore);
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void shouldDeleteUser() throws Exception {
+        Usuarios usuario = new Usuarios();
+        usuario.setNome("Usuario");
+        usuario.setSobrenome("Para Deletar");
+        usuario.setEmail("usuario.delete@teste.com");
+        usuario.setSenha("password");
+
+        usuario = usuariosRepository.save(usuario);
+
+        Long id = usuario.getId();
+
+        mockMvc.perform(
+                        get("/dashboard/usuarios/deletar/{id}", id)
+                )
+                .andExpect(status().isOk())
+                .andExpect(view().name("dashboard/sucesso"));
+
+        assertThat(usuariosRepository.findById(id))
                 .isEmpty();
     }
 }
