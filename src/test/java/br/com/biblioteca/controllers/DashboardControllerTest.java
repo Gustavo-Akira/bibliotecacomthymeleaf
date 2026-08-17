@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -50,14 +51,19 @@ class DashboardControllerTest {
 
     @Autowired
     private RolesRepository rolesRepository;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {
-        Role role = new Role();
-        role.setId(2L);
-        role.setNome("ROLE_SECRETARY");
-
-        rolesRepository.save(role);
+        if(!rolesRepository.existsById(2L)){
+            jdbcTemplate.update(
+                    "INSERT INTO role (id, nome) VALUES (?, ?) " +
+                            "ON CONFLICT (id) DO NOTHING",
+                    2L,
+                    "ROLE_SECRETARY"
+            );
+        }
     }
 
     @Test
