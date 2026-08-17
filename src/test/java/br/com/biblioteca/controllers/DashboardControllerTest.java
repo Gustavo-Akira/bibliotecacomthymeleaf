@@ -15,6 +15,7 @@ import java.util.List;
 
 import br.com.biblioteca.models.*;
 import br.com.biblioteca.repositories.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -49,6 +50,15 @@ class DashboardControllerTest {
 
     @Autowired
     private RolesRepository rolesRepository;
+
+    @BeforeEach
+    void setUp() {
+        Role role = new Role();
+        role.setId(2L);
+        role.setNome("ROLE_SECRETARY");
+
+        rolesRepository.save(role);
+    }
 
     @Test
     @WithMockUser(roles = "ADMIN")
@@ -346,7 +356,6 @@ class DashboardControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     void shouldCreateUser() throws Exception {
-        createSecretaryRole();
         long usersBefore = usuariosRepository.count();
 
         mockMvc.perform(
@@ -385,7 +394,6 @@ class DashboardControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     void shouldEditUser() throws Exception {
-        createSecretaryRole();
         Usuarios usuario = new Usuarios();
         usuario.setNome("Nome Original");
         usuario.setSobrenome("Sobrenome Original");
@@ -445,19 +453,5 @@ class DashboardControllerTest {
 
         assertThat(usuariosRepository.findById(id))
                 .isEmpty();
-    }
-
-    private void createSecretaryRole() {
-        if(rolesRepository.existsById(2L)){
-            return;
-        }
-        Role admin = new Role();
-        admin.setNome("ROLE_ADMIN");
-        rolesRepository.save(admin);
-        Role role = new Role();
-        role.setNome("ROLE_SECRETARY");
-
-        rolesRepository.save(role);
-
     }
 }
