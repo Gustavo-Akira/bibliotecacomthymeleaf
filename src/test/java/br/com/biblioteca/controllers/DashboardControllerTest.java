@@ -47,6 +47,9 @@ class DashboardControllerTest {
     @Autowired
     private UsuariosRepository usuariosRepository;
 
+    @Autowired
+    private RolesRepository rolesRepository;
+
     @Test
     @WithMockUser(roles = "ADMIN")
     void shouldCreateBookWithoutGenre() throws Exception {
@@ -343,6 +346,7 @@ class DashboardControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     void shouldCreateUser() throws Exception {
+        createSecretaryRole();
         long usersBefore = usuariosRepository.count();
 
         mockMvc.perform(
@@ -381,6 +385,7 @@ class DashboardControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     void shouldEditUser() throws Exception {
+        createSecretaryRole();
         Usuarios usuario = new Usuarios();
         usuario.setNome("Nome Original");
         usuario.setSobrenome("Sobrenome Original");
@@ -440,5 +445,16 @@ class DashboardControllerTest {
 
         assertThat(usuariosRepository.findById(id))
                 .isEmpty();
+    }
+
+    private void createSecretaryRole() {
+        if(!rolesRepository.existsById(2L)){
+            return;
+        }
+        Role role = new Role();
+        role.setId(2L);
+        role.setNome("ROLE_SECRETARY");
+
+        rolesRepository.save(role);
     }
 }
