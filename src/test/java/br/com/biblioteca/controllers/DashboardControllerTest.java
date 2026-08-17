@@ -400,6 +400,7 @@ class DashboardControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     void shouldEditUser() throws Exception {
+
         Usuarios usuario = new Usuarios();
         usuario.setNome("Nome Original");
         usuario.setSobrenome("Sobrenome Original");
@@ -407,7 +408,7 @@ class DashboardControllerTest {
         usuario.setSenha("password");
 
         usuario = usuariosRepository.save(usuario);
-
+        long usersBefore = usuariosRepository.count();
         Long id = usuario.getId();
 
         mockMvc.perform(
@@ -435,7 +436,7 @@ class DashboardControllerTest {
                 .isEqualTo("usuario.edicao@teste.com");
 
         assertThat(usuariosRepository.count())
-                .isEqualTo(3);
+                .isEqualTo(usersBefore);
     }
 
     @Test
