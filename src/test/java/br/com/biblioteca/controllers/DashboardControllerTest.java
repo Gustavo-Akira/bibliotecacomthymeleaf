@@ -451,10 +451,13 @@ class DashboardControllerTest {
         if(rolesRepository.existsById(2L)){
             return;
         }
+        Role admin = new Role();
+        admin.setNome("ROLE_ADMIN");
+        rolesRepository.save(admin);
         Role role = new Role();
-        role.setId(2L);
         role.setNome("ROLE_SECRETARY");
 
         rolesRepository.save(role);
+
     }
 }
