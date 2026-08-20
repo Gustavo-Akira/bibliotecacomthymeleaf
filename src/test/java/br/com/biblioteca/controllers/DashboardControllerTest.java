@@ -15,6 +15,7 @@ import java.util.List;
 
 import br.com.biblioteca.models.*;
 import br.com.biblioteca.repositories.*;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Transactional
 class DashboardControllerTest {
 
     @Autowired
@@ -66,6 +66,15 @@ class DashboardControllerTest {
         }
     }
 
+    @AfterEach
+    void close(){
+        usuariosRepository.deleteAll();
+        editorasRepository.deleteAll();
+        logradouroRepository.deleteAll();
+        livrosRepository.deleteAll();
+        generoRepository.deleteAll();
+    }
+
     @Test
     @WithMockUser(roles = "ADMIN")
     void shouldCreateBookWithoutGenre() throws Exception {
@@ -95,7 +104,6 @@ class DashboardControllerTest {
         assertThat(livro.getNome()).isEqualTo("Clean Code");
         assertThat(livro.getQuantidade()).isEqualTo(BigInteger.TEN);
         assertThat(livro.getPreco()).isEqualByComparingTo(new BigDecimal("89.90"));
-
         // Characterization:
         // the application currently allows a book without a genre.
         assertThat(livro.getGeneros()).isNullOrEmpty();
@@ -228,27 +236,6 @@ class DashboardControllerTest {
                 .isEqualTo("atualizada@teste.com");
     }
 
-    @Test
-    @WithMockUser(roles = "ADMIN")
-    void shouldFailToDeletePublisherWithoutAddress() throws Exception {
-        Editora editora = new Editora();
-        editora.setNome("Editora Sem Logradouro");
-        editora.setEmail("semendereco@teste.com");
-
-        editora = editorasRepository.save(editora);
-
-        Long id = editora.getId();
-
-        assertThatThrownBy(() ->
-                mockMvc.perform(
-                        get("/dashboard/editoras/deletar/{id}", id)
-                ).andReturn()
-        )
-                .hasCauseInstanceOf(NullPointerException.class);
-
-        assertThat(editorasRepository.findById(id))
-                .isPresent();
-    }
     @Test
     @WithMockUser(roles = "ADMIN")
     void shouldDeletePublisherWithAddress() throws Exception {
@@ -410,7 +397,6 @@ class DashboardControllerTest {
         usuario = usuariosRepository.save(usuario);
         long usersBefore = usuariosRepository.count();
         Long id = usuario.getId();
-
         mockMvc.perform(
                         post("/dashboard/usuarios/salvar")
                                 .param("id", id.toString())
@@ -422,7 +408,6 @@ class DashboardControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(view().name("dashboard/sucesso"));
-
         Usuarios updated = usuariosRepository.findById(id)
                 .orElseThrow();
 

@@ -4,18 +4,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 
+import jakarta.persistence.*;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -37,12 +27,11 @@ public class Livros {
 	@ManyToOne
 	private Editora editora;
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "livros_genero", joinColumns = @JoinColumn(name = "livro_id", referencedColumnName = "id", table = "livros"), inverseJoinColumns = @JoinColumn(name = "genero_id", referencedColumnName = "id", table = "genero"))
 	private List<Genero> generos;
 
-	@LazyCollection(LazyCollectionOption.FALSE)
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	private List<Foto> fotos;
 
 	private String descricao;

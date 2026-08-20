@@ -103,8 +103,10 @@ public class DashboardController {
 		usuario.setRoles(roles);
 		usuario.setSenha(new BCryptPasswordEncoder().encode(usuario.getSenha()));
 		usuario = usuarioRepository.save(usuario);
-		logradouro.setUsuario(usuario);
-		logradouroRepository.save(logradouro);
+		if(logradouro.getUsuario() != null) {
+			logradouro.setUsuario(usuario);
+			logradouroRepository.save(logradouro);
+		}
 		ModelAndView model = new ModelAndView("dashboard/sucesso");
 		model.addObject("tipo", "inserido");
 		model.addObject("entidade", "usuario");
