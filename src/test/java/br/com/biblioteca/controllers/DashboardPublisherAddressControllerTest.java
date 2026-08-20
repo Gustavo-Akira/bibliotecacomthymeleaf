@@ -20,8 +20,6 @@ import br.com.biblioteca.models.Logradouro;
 import br.com.biblioteca.repositories.EditorasRepository;
 import br.com.biblioteca.repositories.LogradouroRepository;
 
-import java.util.List;
-
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
