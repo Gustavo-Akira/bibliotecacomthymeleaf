@@ -240,7 +240,7 @@ public class DashboardController {
 		return model;
 	}
 
-	@GetMapping(value = "**/editoras")
+	@GetMapping(value = "/editoras")
 	public ModelAndView editoras() {
 		ModelAndView model = new ModelAndView("dashboard/editora/index");
 		Page<Editora> editoras = editorasRepository.findAll(PageRequest.of(0, 5, Sort.by("nome")));
@@ -248,13 +248,13 @@ public class DashboardController {
 		return model;
 	}
 
-	@GetMapping(value = "**/editoras/novo")
+	@GetMapping(value = "/editoras/novo")
 	public ModelAndView novaeditora() {
 		ModelAndView model = new ModelAndView("dashboard/editora/novo");
 		return model;
 	}
 
-	@PostMapping(value = "**/editoras/salvar")
+	@PostMapping(value = "/editoras/salvar")
 	public ModelAndView salvareditora(Editora editora, Logradouro logradouro) {
 		editora = editorasRepository.save(editora);
 		logradouro.setEditora(editora);
@@ -316,7 +316,7 @@ public class DashboardController {
 		return model;
 	}
 
-	@PostMapping(value = "**/generos/salvar")
+	@PostMapping(value = "/generos/salvar")
 	public ModelAndView generosalvar(Genero genero) {
 		generoRepository.save(genero);
 		ModelAndView model = new ModelAndView("dashboard/generos/index");
@@ -325,7 +325,7 @@ public class DashboardController {
 		return model;
 	}
 
-	@GetMapping(value = "**/generos/deletar/{id}")
+	@GetMapping(value = "/generos/deletar/{id}")
 	public ModelAndView generoDeletar(@PathVariable("id") Long id) {
 		generoRepository.deleteById(id);
 		ModelAndView model = new ModelAndView("dashboard/generos/index");
@@ -334,7 +334,7 @@ public class DashboardController {
 		return model;
 	}
 
-	@GetMapping(value = "**/generos/edita	r/{id}")
+	@GetMapping(value = "/generos/edita	r/{id}")
 	public ModelAndView generoEditar(@PathVariable("id") Long id) {
 		Optional<Genero> genero = generoRepository.findById(id);
 		ModelAndView model = new ModelAndView("dashboard/generos/editar");
