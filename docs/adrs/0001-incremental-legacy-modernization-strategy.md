@@ -47,17 +47,30 @@ These tests will initially focus on characterizing the existing behavior rather 
 
 The goal is to establish a sufficient safety net to detect unintended regressions during subsequent migrations.
 
-### Phase 2 — Java Migration
+### Phase 2 — Platform Runtime Migration
 
-The Java runtime will be migrated incrementally from its current version to a newer supported version.
+The Java runtime will be migrated toward a supported LTS version as part
+of the platform modernization strategy defined in subsequent ADRs.
 
-The migration will focus on compatibility and maintaining existing application behavior while addressing issues introduced by the new Java version and its ecosystem.
+The migration sequence will account for compatibility between the Java
+runtime, Spring Boot, and the application's dependencies.
+
+The goal of this phase is to establish a supported Java runtime while
+preserving existing application behavior and keeping each migration step
+independently validated.
 
 ### Phase 3 — Spring Boot Migration
 
-After the Java migration has been stabilized, Spring Boot and its related dependencies will be migrated incrementally.
+After the platform migration has established a suitable Java runtime
+baseline, Spring Boot and its related dependencies will be migrated
+incrementally.
 
-The migration will address breaking changes, deprecated APIs, and compatibility issues while maintaining existing application behavior whenever possible.
+The migration will account for compatibility between Spring Boot, Java,
+and the application's dependencies.
+
+The migration will address breaking changes, deprecated APIs, and
+compatibility issues while maintaining existing application behavior
+whenever possible.
 
 ### Phase 4 — Architectural Refactoring
 
