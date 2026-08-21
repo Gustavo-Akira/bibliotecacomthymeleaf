@@ -26,16 +26,14 @@ public class Editora {
 	
 	private String nome;
 	
-	@LazyCollection(LazyCollectionOption.FALSE)
-	@OneToMany(mappedBy = "editora",cascade = CascadeType.ALL,orphanRemoval = true)
+
+	@OneToMany(mappedBy = "editora",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
 	private List<Logradouro> logradouro;
 	
-	@LazyCollection(LazyCollectionOption.FALSE)
-	@OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.ALL,orphanRemoval = true, fetch =  FetchType.EAGER)
 	private List<Livros> livros; 
 	
-	@LazyCollection(LazyCollectionOption.FALSE)
-	@OneToMany(mappedBy = "editora", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "editora", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	private List<Telefone> telefones;
 	
 	private String email;

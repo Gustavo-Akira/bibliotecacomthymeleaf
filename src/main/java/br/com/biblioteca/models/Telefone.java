@@ -1,11 +1,6 @@
 package br.com.biblioteca.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -24,7 +19,7 @@ public class Telefone {
 	private Usuarios usuario;
 	
 	@JsonIgnore
-	@ManyToOne(optional = true)
+	@ManyToOne(optional = true,fetch = FetchType.EAGER)
 	@JoinColumn(name = "editora_id")
 	private Editora editora;
 

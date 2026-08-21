@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import br.com.biblioteca.controllers.dto.CreateLogradouroRequest;
+import br.com.biblioteca.controllers.dto.CreateTelephoneRequest;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,10 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -357,7 +356,9 @@ public class DashboardController {
 	}
 
 	@PostMapping(value = "/telefone/novo/editora/{id}")
-	public ModelAndView novotelefone(Telefone telefone, @PathVariable("id") Long id) {
+	public ModelAndView novotelefone(@ModelAttribute CreateTelephoneRequest request, @PathVariable("id") Long id) {
+		Telefone telefone = new Telefone();
+		telefone.setNumero(request.numero());
 		Editora editora = editorasRepository.findById(id).get();
 		telefone.setEditora(editora);
 		telefoneRepository.save(telefone);
@@ -377,7 +378,7 @@ public class DashboardController {
 	}
 
 	@GetMapping(value = "/telefone/editar/{id}")
-	public ModelAndView editarT(@PathVariable("id") Long id) {
+	public ModelAndView editarTelefone(@PathVariable("id") Long id) {
 		Telefone telefone = telefoneRepository.findById(id).get();
 		ModelAndView model = new ModelAndView("dashboard/telefone/editar");
 		model.addObject("telefone", telefone);
@@ -404,8 +405,17 @@ public class DashboardController {
 	}
 
 	@PostMapping(value = "logradouro/salvar/editora/{id}")
-	public ModelAndView novologradouro(Logradouro logradouro, @PathVariable("id") Long id) {
+	public ModelAndView novologradouro(CreateLogradouroRequest createLogradouroRequest, @PathVariable("id") Long id) {
 		Editora editora = editorasRepository.findById(id).get();
+		Logradouro logradouro = new Logradouro();
+		logradouro.setRua(createLogradouroRequest.rua());
+		logradouro.setNumero(createLogradouroRequest.numero());
+		logradouro.setCidade(createLogradouroRequest.cidade());
+		logradouro.setComplemento(createLogradouroRequest.complemento());
+		logradouro.setUf(createLogradouroRequest.uf());
+		logradouro.setIbge(createLogradouroRequest.ibge());
+		logradouro.setCEP(createLogradouroRequest.CEP());
+		logradouro.setBairro(createLogradouroRequest.bairro());
 		logradouro.setEditora(editora);
 		logradouroRepository.save(logradouro);
 		ModelAndView model = new ModelAndView("dashboard/sucesso");
