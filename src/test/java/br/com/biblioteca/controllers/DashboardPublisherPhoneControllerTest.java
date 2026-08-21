@@ -43,10 +43,7 @@ class DashboardPublisherPhoneControllerTest {
         long phonesBefore = telefoneRepository.count();
 
         mockMvc.perform(
-                        post(
-                                "/dashboard/telefone/novo/editora/{id}",
-                                editora.getId()
-                        )
+                        post("/dashboard/telefone/novo/editora/{id}", editora.getId())
                                 .param("numero", "11999999999")
                                 .with(user("admin").roles("ADMIN"))
                                 .with(csrf())
@@ -114,7 +111,6 @@ class DashboardPublisherPhoneControllerTest {
         Editora editora = new Editora();
         editora.setNome("Editora Teste");
         editora.setEmail("editora@teste.com");
-        editora.setTelefones(new ArrayList<>());
         return editorasRepository.save(editora);
     }
 

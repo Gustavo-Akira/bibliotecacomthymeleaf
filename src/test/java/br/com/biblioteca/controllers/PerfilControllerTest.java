@@ -9,15 +9,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import java.util.List;
+import java.util.Optional;
 
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
 
-import br.com.biblioteca.models.Logradouro;
 import br.com.biblioteca.models.Role;
 import br.com.biblioteca.models.Usuarios;
 import br.com.biblioteca.repositories.LogradouroRepository;
@@ -68,9 +68,15 @@ class PerfilControllerTest {
 
 
     private Usuarios createUser(String email, String roleName) {
-        Role role = new Role();
-        role.setNome(roleName);
-        role = rolesRepository.save(role);
+        Optional<Role> oldRole = rolesRepository.findAll().stream().filter(x->x.getNome().equals(roleName)).findAny();
+        Role role = null;
+        if(oldRole.isEmpty()){
+            role = new Role();
+            role.setNome(roleName);
+            role = rolesRepository.save(role);
+        }else{
+            role = oldRole.get();
+        }
 
         Usuarios usuario = new Usuarios();
         usuario.setNome("Usuario");
@@ -80,13 +86,5 @@ class PerfilControllerTest {
         usuario.setRoles(List.of(role));
 
         return usuarioRepository.save(usuario);
-    }
-
-    private void givenRoleWithId(Long id, String name) {
-        Role role = new Role();
-        role.setId(id);
-        role.setNome(name);
-
-        rolesRepository.save(role);
     }
 }
