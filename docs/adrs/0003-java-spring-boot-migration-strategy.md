@@ -1,6 +1,6 @@
 # ADR-0003: Java and Spring Boot Migration Strategy
 
-* Status: Proposed
+* Status: Completed
 * Date: 2026-08-19
 
 ## Context
@@ -212,7 +212,7 @@ This alternative was selected because it best aligns with the incremental modern
 The platform migration will be considered successful if:
 
 * The application reaches Java 21 version.
-* The application reaches Spring boot 4.1.x.
+* The application reaches Spring boot 4.1.1.
 * Each intermediate migration step is independently validated.
 * The application remains buildable and runnable throughout the migration.
 * The characterization test suite passes after each migration step, except for explicitly documented pre-existing failures.
@@ -228,3 +228,5 @@ This ADR defines the migration strategy and target platform direction. It does n
 The planned sequence may be adjusted if compatibility testing reveals a safer migration path.
 
 Significant changes to the migration strategy should be documented through an ADR update or a new ADR.
+
+ADR completed with success
