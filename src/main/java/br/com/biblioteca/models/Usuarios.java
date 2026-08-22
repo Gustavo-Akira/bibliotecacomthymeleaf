@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -44,23 +42,19 @@ public class Usuarios implements UserDetails{
 	@CPF(message = "erro cpf invalido")
 	private String CPF;
 
-	@LazyCollection(LazyCollectionOption.FALSE)
-	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	private List<Telefone> telefones;
 
-	@LazyCollection(LazyCollectionOption.FALSE)
-	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	private List<Cartoes> cartoes;
 	
-	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	private List<Logradouro> logradouros;
 
-	@LazyCollection(LazyCollectionOption.FALSE)
-	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = false)
+	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = false, fetch = FetchType.EAGER)
 	private List<Registros> registros;
 	
-	@LazyCollection(LazyCollectionOption.FALSE)
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "usuarios_role",joinColumns = @JoinColumn(name = "usuario_id", referencedColumnName = "id",table = "usuarios"), inverseJoinColumns =  @JoinColumn(name="role_id", referencedColumnName = "id"))
 	private List<Role> roles;
 	
