@@ -3,24 +3,27 @@ package br.com.biblioteca.controllers;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.biblioteca.models.Editora;
 import br.com.biblioteca.models.Telefone;
 import br.com.biblioteca.repositories.EditorasRepository;
 import br.com.biblioteca.repositories.TelefoneRepository;
+import org.springframework.web.context.WebApplicationContext;
 
-import java.util.ArrayList;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -28,6 +31,8 @@ import java.util.ArrayList;
 class DashboardPublisherPhoneControllerTest {
 
     @Autowired
+    private WebApplicationContext context;
+
     private MockMvc mockMvc;
 
     @Autowired
@@ -35,6 +40,14 @@ class DashboardPublisherPhoneControllerTest {
 
     @Autowired
     private TelefoneRepository telefoneRepository;
+
+    @BeforeEach
+    void setUp() {
+        mockMvc = MockMvcBuilders
+                .webAppContextSetup(context)
+                .apply(springSecurity())
+                .build();
+    }
 
     @Test
     void shouldCreatePublisherPhone() throws Exception {
