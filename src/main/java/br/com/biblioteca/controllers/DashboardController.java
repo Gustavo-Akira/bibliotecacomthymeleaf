@@ -303,45 +303,7 @@ public class DashboardController {
 		model.addObject("entidade", "editora");
 		return model;
 	}
-	@GetMapping(value = "/generos")
-	public ModelAndView generos() {
-		ModelAndView model = new ModelAndView("dashboard/generos/index");
-		Page<Genero> generos = generoRepository.findAll(PageRequest.of(0, 5, Sort.by("nome")));
-		model.addObject("generos", generos);
-		return model;
-	}
 
-	@GetMapping(value = "/generos/novo")
-	public ModelAndView generosnovo() {
-		ModelAndView model = new ModelAndView("dashboard/generos/novo");
-		return model;
-	}
-
-	@PostMapping(value = "/generos/salvar")
-	public ModelAndView generosalvar(Genero genero) {
-		generoRepository.save(genero);
-		ModelAndView model = new ModelAndView("dashboard/generos/index");
-		Page<Genero> generos = generoRepository.findAll(PageRequest.of(0, 5, Sort.by("nome")));
-		model.addObject("generos", generos);
-		return model;
-	}
-
-	@GetMapping(value = "/generos/deletar/{id}")
-	public ModelAndView generoDeletar(@PathVariable("id") Long id) {
-		generoRepository.deleteById(id);
-		ModelAndView model = new ModelAndView("dashboard/generos/index");
-		Page<Genero> generos = generoRepository.findAll(PageRequest.of(0, 5, Sort.by("nome")));
-		model.addObject("generos", generos);
-		return model;
-	}
-
-	@GetMapping(value = "/generos/edita	r/{id}")
-	public ModelAndView generoEditar(@PathVariable("id") Long id) {
-		Optional<Genero> genero = generoRepository.findById(id);
-		ModelAndView model = new ModelAndView("dashboard/generos/editar");
-		model.addObject("genero", genero.get());
-		return model;
-	}
 
 	@GetMapping(value = "/compras")
 	public ModelAndView compras() {
