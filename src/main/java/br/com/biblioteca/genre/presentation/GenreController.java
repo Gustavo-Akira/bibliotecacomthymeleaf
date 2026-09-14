@@ -1,5 +1,7 @@
 package br.com.biblioteca.genre.presentation;
 
+import br.com.biblioteca.genre.application.ListGenreUseCase;
+import br.com.biblioteca.genre.application.query.ListGenreQuery;
 import br.com.biblioteca.models.Genero;
 import br.com.biblioteca.repositories.GeneroRepository;
 import org.springframework.data.domain.Page;
@@ -18,16 +20,17 @@ import java.util.Optional;
 @RequestMapping("/dashboard")
 public class GenreController {
     private final GeneroRepository generoRepository;
+    private final ListGenreUseCase listGenreUseCase;
 
-    public GenreController(GeneroRepository generoRepository) {
+    public GenreController(GeneroRepository generoRepository, ListGenreUseCase listGenreUseCase) {
         this.generoRepository = generoRepository;
+        this.listGenreUseCase = listGenreUseCase;
     }
 
     @GetMapping(value = "/generos")
     public ModelAndView listGenres() {
         ModelAndView model = new ModelAndView("dashboard/generos/index");
-        Page<Genero> generos = generoRepository.findAll(PageRequest.of(0, 5, Sort.by("nome")));
-        model.addObject("generos", generos);
+        model.addObject("generos", listGenreUseCase.execute(new ListGenreQuery(5,0)));
         return model;
     }
 
